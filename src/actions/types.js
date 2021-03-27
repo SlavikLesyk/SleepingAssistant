@@ -1,0 +1,6 @@
+export const TOGGLE_ALARM = 'TOGGLE_ALARM';
+export const ADD_ALARM = 'ADD_ALARM';
+export const DELETE_ALARM = 'DELETE_ALARM';
+export const OPEN_ALARM_PROPS = 'OPEN_ALARM_PROPS';
+export const ACTIVATE_DAY = 'ACTIVATE_DAY';
+export const CHANGE_FALL_ASLEEP_TIME = 'CHANGE_FALL_ASLEEP_TIME';
