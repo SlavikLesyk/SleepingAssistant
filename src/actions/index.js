@@ -5,6 +5,9 @@ import {
   OPEN_ALARM_PROPS,
   ACTIVATE_DAY,
   CHANGE_FALL_ASLEEP_TIME,
+  ADD_DREAM_NOTE, 
+  DELETE_DREAM_NOTE,
+  EDIT_DREAM_NOTE,
 } from './types';
 
 export const toggleAlarm = id => {
@@ -49,3 +52,11 @@ export const changeFallAsleepTime = time => {
   }
 }
 
+// export const addNewDream = id => {
+//   return {
+//     type:
+//     payload: id
+//   }
+// }
+
+// export const 

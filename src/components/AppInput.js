@@ -8,6 +8,7 @@ const AppInput = (props) => {
     <TextInput 
       autCapitalize='none'
       autoCompleteType=  'off'
+      spellCheck={false}
       { ...props} 
       style={[styles.input, props.style]}
     />

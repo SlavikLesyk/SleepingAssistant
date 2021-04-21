@@ -17,7 +17,7 @@ renderList = ({item}) => {
 const AlarmListScreen = ({ alarms, navigation }) => {
   return (
     <GestureRecognizer 
-      onSwipeLeft={() => navigation.navigate('Playlists')} 
+      onSwipeLeft={() => navigation.navigate('Playlist')} 
       onSwipeRight={() => navigation.navigate('Home')}
       style={{flex: 1}}
     >

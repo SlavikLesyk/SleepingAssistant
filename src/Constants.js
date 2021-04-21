@@ -1,7 +1,11 @@
-import { Dimensions } from 'react-native';
+import { Dimensions, StatusBar } from 'react-native';
 
-export const windowHeight = Dimensions.get('window').height;
-export const windowWidth = Dimensions.get('window').width;
+const HEIGHT = Dimensions.get('window').height;
+const WIDTH = Dimensions.get('window').width;
+const STATUS_BAR_HEIGHT = StatusBar.currentHeight;
+
+export const windowHeight = HEIGHT - STATUS_BAR_HEIGHT;
+export const windowWidth = WIDTH;
 
 export const COLOR_MAIN = 'rgb(122, 183, 232)';
 export const COLOR_SECONDARY = 'rgb(255, 255, 255)';

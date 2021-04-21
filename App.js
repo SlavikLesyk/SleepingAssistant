@@ -11,7 +11,8 @@ import AboutProgramScreen from './src/screens/AboutProgramScreen';
 import AboutUsScreen from './src/screens/AboutUsScreen';
 import DreamListScreen from './src/screens/DreamListScreen';
 import DreamNoteScreen from './src/screens/DreamNoteScreen';
-import PersonalisationScreen from './src/screens/PersonalisationScreen'
+import EditNoteScreen from './src/screens/EditNoteScreen';
+import PersonalisationScreen from './src/screens/PersonalisationScreen';
 import StartingScreen from './src/screens/StartingScreen';
 import reducers from './src/reducers';
 
@@ -24,15 +25,16 @@ const App = () => {
     <Provider store = {createStore(reducers)}>
       <NavigationContainer>
         <Stack.Navigator  
-          initialRouteName="Home" 
+          initialRouteName="DreamNote" 
           screenOptions={{
           headerShown: false
         }}>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Alarm" component={AlarmListScreen} />
-          <Stack.Screen name="Playlists" component={PlaylistScreen} />
+          <Stack.Screen name="Playlist" component={PlaylistScreen} />
           <Stack.Screen name="DreamsList" component={DreamListScreen} />
           <Stack.Screen name="DreamNote" component={DreamNoteScreen} />
+          <Stack.Screen name="EditNote" component={EditNoteScreen} />
           <Stack.Screen name="About" component={AboutProgramScreen} />
           <Stack.Screen name="AboutUs" component={AboutUsScreen} />
           <Stack.Screen name="Personalisation" component={PersonalisationScreen} />

@@ -7,11 +7,16 @@ import Button from '../components/Button';
 const DreamListScreen = ({ navigation }) => {
   return (
     <GestureRecognizer 
-      onSwipeRight={() => navigation.navigate('Playlists')}
+      onSwipeRight={() => navigation.navigate('Playlist')}
       onSwipeLeft={() => navigation.navigate('About')}
       style={{flex: 1}}>
       <AppBackground>
-        <Button onPress={() => navigation.navigate('DreamNote')}>add ream note</Button>
+        <Button 
+          onPress={() => navigation.navigate('DreamNote')}
+          isNewDream={true} 
+        >
+          add ream note
+        </Button>
       </AppBackground>
     </GestureRecognizer>
   );
