@@ -5,16 +5,16 @@ import GestureRecognizer from '../utility/swipe-gestures';
 import AppBackground from '../components/AppBackground';
 import AlarmCard from '../components/AlarmCard';
 
-
-renderList = ({item}) => {
-  return (
-    <View style={styles.cardWrap}>
-      <AlarmCard closeProps={this.closeProps} {...item} />
-    </View>
-  );
-};
-
 const AlarmListScreen = ({ alarms, navigation }) => {
+  
+  const renderList = ({ item }) => {
+    return (
+      <View style={styles.cardWrap}>
+        <AlarmCard closeProps={this.closeProps} {...item} />
+      </View>
+    );
+  };
+  
   return (
     <GestureRecognizer 
       onSwipeLeft={() => navigation.navigate('Playlist')} 

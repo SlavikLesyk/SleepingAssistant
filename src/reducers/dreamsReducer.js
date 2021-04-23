@@ -7,7 +7,7 @@ import {
 const INITIAL_STATE = [
   { 
     id: 1,
-    title: "Big Dog Saw My Secret",
+    title: "Big Dog Know My Secret",
     note: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
               Quisque tempus, turpis sit amet dapibus dignissim, odio
               mi interdum arcu, sit amet ultricies nulla augue ac massa.
@@ -38,8 +38,6 @@ const INITIAL_STATE = [
               orci. Nulla gravida, nisl sit amet feugiat auctor, turpis dui
               maximus dui, convallis tristique enim urna et libero.`,
     time: 'Sep 67, 2345',
-    name: 'name',
-    days: [false, false, false, false, false, false, false]
   },
   { 
     id: 3,
@@ -57,23 +55,8 @@ const INITIAL_STATE = [
               orci. Nulla gravida, nisl sit amet feugiat auctor, turpis dui
               maximus dui, convallis tristique enim urna et libero.`,
     time: 'Aug 20, 500 B.C.',
-    name: 'name',
-    days: [false, false, false, false, false, false, false]
   },
   ]
-  
-const createAlarm = (time, state) => {
-  const id = state[0] ? state[state.length - 1].id + 1 : 1;
-
-  return { 
-    id: id,
-    time: time,
-    isOn: true,
-    showProps: false,
-    name: 'name',
-    days: [false, false, false, false, false, false, false]
-  }
-}
   
 export default (state = INITIAL_STATE, action) => {
   switch(action.type){

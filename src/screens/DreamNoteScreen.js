@@ -6,25 +6,15 @@ import AppBackground from '../components/AppBackground';
 import { COLOR_MAIN, windowHeight, windowWidth } from '../Constants';
 import AppText from '../components/AppText';
 
-const textProps = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Quisque tempus, turpis sit amet dapibus dignissim, odio
-mi interdum arcu, sit amet ultricies nulla augue ac massa.
-Ut sollicitudin leo nibh, vitae luctus elit sagittis quis.
-Suspendisse aliquet quis libero tincidunt eleifend. Morbi
-commodo fringilla imperdiet. Mauris condimentum tempus
-quam vel tincidunt. In id mattis urna. Nullam erat nulla,
-rhoncus non ullamcorper in, mollis vitae justo. Sed pretium,
-massa id gravida mattis, diam elit fringilla massa, 
-efficitur sagittis nulla odio ut risus. Etiam in ullamcorper
-orci. Nulla gravida, nisl sit amet feugiat auctor, turpis dui
-maximus dui, convallis tristique enim urna et libero.`
-
-const DreamNoteScreen = ({ navigation, isNewDream = true }, props) => {
-  const [header, setHeader] = useState('My dream');
-  const [text, setText] = useState(textProps);
+const DreamNoteScreen = ({ navigation, route }) => {
+  const {data, isNewDream} = route.params;
+  const [header, setHeader] = useState(isNewDream ? 'My dream' : data.title);
+  const [text, setText] = useState(data ? data.note : null);
   const [newDream, setNewDream] = useState(isNewDream);
   const [editMode, seteditMode] = useState (isNewDream);
-  const date = isNewDream ? new Date().toLocaleDateString() : props.date;
+  const date = isNewDream ? new Date().toLocaleDateString() : data.time;
+
+  console.log(data)
 
   const renderHeader= () => {
     if (editMode) {

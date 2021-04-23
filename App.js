@@ -25,7 +25,7 @@ const App = () => {
     <Provider store = {createStore(reducers)}>
       <NavigationContainer>
         <Stack.Navigator  
-          initialRouteName="DreamNote" 
+          initialRouteName="DreamsList" 
           screenOptions={{
           headerShown: false
         }}>
