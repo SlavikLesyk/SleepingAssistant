@@ -1,19 +1,19 @@
 import React from 'react';
-import { 
-  View, 
-  Text, 
+import {
+  View,
+  Text,
   StyleSheet,
   Dimensions
 } from 'react-native';
-import Animated, { 
+import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
-  useSharedValue, 
+  useSharedValue,
 } from 'react-native-reanimated';
-import {PanGestureHandler} from 'react-native-gesture-handler';
+import { PanGestureHandler } from 'react-native-gesture-handler';
 
 const windowWidth = Dimensions.get('window').width;
-const sliderWidth = windowWidth * .7;sliderWidth;
+const sliderWidth = windowWidth * .7; sliderWidth;
 const knobWidth = sliderWidth * .08;
 
 function ValueSlider() {
@@ -22,20 +22,20 @@ function ValueSlider() {
 
   const clamp = (value, lowerBound, upperBound) => {
     'worklet';
-    return Math.min(Math.max(lowerBound,value),upperBound);
+    return Math.min(Math.max(lowerBound, value), upperBound);
   };
 
   const onGestureEvent = useAnimatedGestureHandler({
-    onStart: (_,ctx) => {
+    onStart: (_, ctx) => {
       ctx.offsetX = translateX.value;
     },
-    onActive: (event,ctx) => {
+    onActive: (event, ctx) => {
       isSliding.value = true;
-      translateX.value = clamp(event.translationX + ctx.offsetX, -sliderWidth * .8 , 0);
+      translateX.value = clamp(event.translationX + ctx.offsetX, -sliderWidth * .8, 0);
     },
     onEnd: () => {
       isSliding.value = false;
-      console.log(1 + translateX.value / (sliderWidth *.8))
+      console.log(1 + translateX.value / (sliderWidth * .8))
     }
   });
 
@@ -54,26 +54,26 @@ function ValueSlider() {
   return (
     <View style={styles.container}>
       <View style={styles.slider}>
-        <Animated.View style={[styles.progress, progressStyle]}/>
-        <Animated.View style={[styles.progressBackground, progressBackgroundStyle]}/>
+        <Animated.View style={[styles.progress, progressStyle]} />
+        <Animated.View style={[styles.progressBackground, progressBackgroundStyle]} />
         <PanGestureHandler onGestureEvent={onGestureEvent}>
           <Animated.View style={[styles.knob, scrollTranlationStyle]} />
         </PanGestureHandler>
-      </View>  
+      </View>
       <Text>
-        {1 + translateX.value / (sliderWidth *.8)}  
-      </Text>  
-    </View> 
+        {1 + translateX.value / (sliderWidth * .8)}
+      </Text>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     flex: 1,
     alignItems: 'center',
     paddingTop: 20,
   },
-  knob:{
+  knob: {
     width: knobWidth,
     height: knobWidth,
     borderRadius: knobWidth * .5,
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: sliderWidth * .1 - knobWidth * .5,
   },
-  slider:{
+  slider: {
     backgroundColor: 'darkblue',
     flexDirection: 'row',
     alignItems: 'center',
@@ -90,13 +90,13 @@ const styles = StyleSheet.create({
     width: sliderWidth,
     height: sliderWidth * .16,
   },
-  progress:{
+  progress: {
     height: 3,
     backgroundColor: 'lime',
   },
-  progressBackground:{
+  progressBackground: {
     height: 3,
-    backgroundColor: 'tomato' ,
+    backgroundColor: 'tomato',
   }
 });
 

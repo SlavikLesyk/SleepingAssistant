@@ -1,50 +1,12 @@
-import  React, { useState }  from 'react';
+import  React from 'react';
 import { View, StyleSheet, FlatList, TouchableHighlight, ScrollView } from 'react-native';
 import { Player } from '@react-native-community/audio-toolkit';
 import GestureRecognizer from '../utility/swipe-gestures';
-// import { Audio } from 'expo-av';
-// import styled from 'styled-components/native';
 import AppBackground from '../components/AppBackground';
 import AppText from '../components/AppText';
 import AppInput from '../components/AppInput';
 import Button from '../components/Button';
 import { BG_COLOR_COMPONENTS, windowHeight } from '../Constants';
-import { color } from 'react-native-reanimated';
-
-
-//       <GestureRecognizer 
-//         onSwipeLeft={() => this.props.navigation.navigate('DreamsList')}
-//         onSwipeRight={() => this.props.navigation.navigate('Alarm')}
-//         style={{flex: 1}}>
-//         <AppBackground>
-//           <Container>
-//             <SoundsList>
-//               {this.renderList()}
-//             </SoundsList>
-            // <SoundsControl>
-            //   <AppText style={[styles.copyright, {opacity: this.state.sound ? 1 : 0}]}>@ by {this.state.sound ? this.state.sound.author : null}</AppText>
-            //   <Button onPress={this.silence}>silence</Button>
-            //   <FadeOutPanel>
-            //     <AppText>fade out in:</AppText>
-            //     <AppInput 
-            //       value={this.state.fadeOutTime} 
-            //       onFocus={() => this.setState({fadeOutTime: ""})}
-            //       onChangeText={value => this.setState({fadeOutTime: value.replace(/[^0-9]{0,2}/g, '')})}
-            //       onBlur={() => {
-            //         this.state.isLoaded ? this.startFadeOut(this.state.fadeOutTime) : null
-            //         this.setState( prevState => prevState.fadeOutTime && !prevState.fadeOutTime == '0' ? {fadeOutTime: prevState.fadeOutTime} : {fadeOutTime: '1'})
-            //       }}
-            //       keyboardType='number-pad' 
-            //     />
-            //     <AppText>min</AppText>
-            //   </FadeOutPanel>
-            // </SoundsControl>
-//           </Container>
-//         </AppBackground>
-//       </GestureRecognizer>
-//     );
-//   }
-// };
 
 const sounds = [
   {
@@ -87,23 +49,12 @@ class PlaylistScreen extends React.Component {
   }
 
   player = new Player();
-  startingVolume = 1;    // -> this.props.volume from redux 
+  startingVolume = 1; 
   volume = 1;
 
   fadeOutTimer = null;
   fadeOutTimerStart = null; 
-
  
-  // const silence = () => {
-  //   // clearTimeout(this.fadeOutTimerStart);
-  //   // clearTimeout(this.fadeOutTimer);
-  //   console.log(player)
-  //   player.stop();
-  //   // setSound(null);
-
-  // } ;
-  
-  
   createPlayer = (fileName) => {
     this.player = new Player(fileName, {
       autoDestroy: false,

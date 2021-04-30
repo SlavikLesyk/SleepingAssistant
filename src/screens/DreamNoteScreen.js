@@ -1,22 +1,131 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
+import { connect } from 'react-redux';
 import Button from '../components/Button';
 import AppInput from '../components/AppInput';
 import AppBackground from '../components/AppBackground';
-import { COLOR_MAIN, windowHeight, windowWidth } from '../Constants';
+import ModalAsk from '../components/ModalAsk';
 import AppText from '../components/AppText';
+import { BG_COLOR_COMPONENTS, windowHeight, windowWidth } from '../Constants';
+import { addNewDream, editDream, deleteDream } from '../actions';
 
-const DreamNoteScreen = ({ navigation, route }) => {
-  const {data, isNewDream} = route.params;
-  const [header, setHeader] = useState(isNewDream ? 'My dream' : data.title);
-  const [text, setText] = useState(data ? data.note : null);
+const mapStateToProps = (state, ownProps) => {
+  return {
+    dreams: state.dreams,
+    dream: state.dreams.find((dream) => dream.id === ownProps.route.params.id)
+  };
+};
+
+const DreamNoteScreen = (props) => {
+  const {
+    navigation,
+    route,
+    dreams,
+    dream,
+    deleteDream,
+    editDream,
+    addNewDream
+  } = props;
+  const { isNewDream } = route.params;
+  const date = isNewDream ? new Date().toLocaleDateString() : dream.time;
+  const DEFAULT_TITLE = 'Another Dream Note';
+
+  const [header, setHeader] = useState(isNewDream ? DEFAULT_TITLE : dream.title);
+  const [text, setText] = useState(dream ? dream.note : "");
+  const [editMode, seteditMode] = useState(isNewDream);
   const [newDream, setNewDream] = useState(isNewDream);
-  const [editMode, seteditMode] = useState (isNewDream);
-  const date = isNewDream ? new Date().toLocaleDateString() : data.time;
+  const [needAdd, setNeedAdd] = useState(isNewDream);
+  const [id, setId] = useState(dream ? dream.id : dreams.length ? dreams[dreams.length - 1].id + 1 : 1);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalProps, setModalProps] = useState({});
 
-  console.log(data)
+  const visibleHandler = () => setModalVisible(!modalVisible);
 
-  const renderHeader= () => {
+  const editModeToggle = () => seteditMode(!editMode);
+
+  const onDeleteYes = () => {
+    deleteDream(id);
+    onPressBack();
+  };
+
+  const onBackYes = () => {
+    onPressSave();
+    onPressBack();
+  };
+
+  const onBackNo = () => {
+    onPressBack();
+  };
+
+  const onFirstTimeFocus = () => {
+    if (newDream) {
+      setHeader('');
+      setNewDream(false);
+    }
+  };
+
+  onPressSave = () => {
+    editModeToggle();
+    if (needAdd) {
+      addNewDream({
+        id: id,
+        title: header,
+        note: text,
+        time: date
+      });
+      setNeedAdd(false);
+    } else {
+      editDream({
+        id: id,
+        title: header,
+        note: text,
+        time: date
+      });
+    }
+
+  };
+
+  onPressBack = () => {
+    navigation.navigate('DreamsList');
+  };
+
+  const setDelProps = () => {
+    setModalProps({
+      title: 'Do you want to delete this note?',
+      yesFunc: onDeleteYes,
+    });
+  };
+
+  const setBackProps = () => {
+    setModalProps({
+      title: `Would you like to save changes?`,
+      yesFunc: onBackYes,
+      noFunc: onBackNo
+    })
+  };
+
+  const defaultCheck = () => {
+    return !(
+      (header === DEFAULT_TITLE || header === '')
+      &&
+      text === ""
+      &&
+      isNewDream
+    );
+  };
+
+  const saveCheck = () => {
+    if (dream) {
+      return !(
+        header === dream.title
+        &&
+        text === dream.note
+      );
+    }
+    return defaultCheck();
+  };
+
+  const renderHeader = () => {
     if (editMode) {
       return (
         <AppInput
@@ -29,63 +138,83 @@ const DreamNoteScreen = ({ navigation, route }) => {
     }
 
     return <AppText style={styles.headerText}>{header}</AppText>
-  }
+  };
+
   const renderDreamText = () => {
     if (editMode) {
       return (
         <AppInput
           value={text}
           onChangeText={value => setText(value)}
-          style={styles.dreamText} 
+          style={[styles.dreamText, { minHeight: windowHeight * .26, backgroundColor: BG_COLOR_COMPONENTS }]}
           autoFocus={isNewDream}
           multiline={true}
         />
       );
     }
     return (
-      <AppText  style={styles.dreamText}> 
+      <AppText style={styles.dreamText}>
         {text}
       </AppText>
     );
-  }
-
-  const editModeToggle = () => {
-    seteditMode(!editMode);
-  }
-  
-  const onFirstTimeFocus = () =>{
-    if (newDream) {
-      setHeader('');
-      setNewDream(false);
-    }
-  }
+  };
 
   const renderBtnPanel = () => {
     return (
       <View style={styles.btnPanel}>
-          <Button onPress={() => navigation.navigate('DreamsList')}>back</Button>
-          <Button onPress={() => navigation.navigate('DreamsList')}>delete</Button>
-          { editMode 
-            ? <Button onPress={editModeToggle}>save</Button>
+        <View style={styles.btnPanelLeft}>
+          <Button
+            onPress={() => {
+              if (saveCheck()) {
+                setBackProps();
+                visibleHandler();
+              } else {
+                onPressBack();
+              }
+            }}>back</Button>
+        </View>
+        <View style={styles.btnPanelRight}>
+          {(editMode)
+            ? <Button onPress={onPressSave}>save</Button>
             : <Button onPress={editModeToggle}>edit</Button>
           }
+          <Button
+            style={{ opacity: defaultCheck() ? 1 : .4 }}
+            onPress={() => {
+              if (defaultCheck()) {
+                setDelProps();
+                visibleHandler();
+              }
+            }}>delete</Button>
+        </View>
       </View>
     );
-  }
+  };
 
   return (
     <AppBackground>
       <View style={styles.container}>
+        <ModalAsk
+          visible={modalVisible}
+          visibleHandler={visibleHandler}
+          modalProps={modalProps}
+        />
         {editMode ? renderBtnPanel() : null}
-        <View style={styles.header}>
-          {renderHeader()}
-        </View>
-        <View style={styles.dreamSection}>
-          <ScrollView style={styles.dreamPanel}>
-            {renderDreamText()}
-            <AppText style={styles.datesText}>{date}</AppText>
-          </ScrollView>
-        </View>
+        <ScrollView style={styles.contentScroll}>
+          <View style={{ marginTop: editMode ? 0 : 25 }}>
+            <View style={styles.headerWrap}>
+              <View style={styles.header}>
+                {renderHeader()}
+              </View>
+            </View>
+            <View style={styles.dreamSection}>
+              <View style={styles.dreamPanel}>
+                {renderDreamText()}
+                {editMode ? null : <AppText style={styles.datesText}>{date}</AppText>}
+              </View>
+            </View>
+          </View>
+        </ScrollView>
         {!editMode ? renderBtnPanel() : null}
       </View>
     </AppBackground>
@@ -95,36 +224,55 @@ const DreamNoteScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
   },
   btnPanel: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     height: windowHeight * .1,
+    width: windowWidth,
+    paddingHorizontal: 20
+  },
+  btnPanelRight: {
+    flexDirection: 'row'
+  },
+  content: {
+
+  },
+  headerWrap: {
+    backgroundColor: BG_COLOR_COMPONENTS
   },
   header: {
+    alignSelf: 'center',
+    justifyContent: 'center',
     height: windowHeight * .07,
     width: windowWidth * .8,
-    borderBottomWidth: 1,
-    borderColor: COLOR_MAIN
+    marginBottom: 15
   },
   headerText: {
-    
+    alignSelf: 'center',
+    textAlign: 'center',
   },
   dreamSection: {
-    height: windowHeight * .83,
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    padding: 15,
+    padding: windowWidth * .03,
     paddingBottom: 0,
   },
   dreamText: {
     textAlign: 'left',
+    textAlignVertical: 'top',
+    marginBottom: windowHeight * .08,
+    width: windowWidth * .94,
   },
   datesText: {
-    alignSelf: 'flex-end'
+    alignSelf: 'flex-end',
+    paddingBottom: windowHeight * .25,
   },
 });
 
-export default DreamNoteScreen;
+export default connect(mapStateToProps, {
+  addNewDream,
+  editDream,
+  deleteDream
+})(DreamNoteScreen);

@@ -1,11 +1,11 @@
-import { 
-  ADD_DREAM_NOTE, 
+import {
+  ADD_DREAM_NOTE,
   DELETE_DREAM_NOTE,
   EDIT_DREAM_NOTE
 } from '../actions/types'
-  
+
 const INITIAL_STATE = [
-  { 
+  {
     id: 1,
     title: "Big Dog Know My Secret",
     note: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -22,7 +22,7 @@ const INITIAL_STATE = [
               maximus dui, convallis tristique enim urna et libero.`,
     time: 'Jan 1, 0'
   },
-  { 
+  {
     id: 2,
     title: "Space, Astral & Boobs",
     note: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -39,7 +39,7 @@ const INITIAL_STATE = [
               maximus dui, convallis tristique enim urna et libero.`,
     time: 'Sep 67, 2345',
   },
-  { 
+  {
     id: 3,
     title: "Flying Rat Die In Haven AGAIN!!!",
     note: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -56,18 +56,36 @@ const INITIAL_STATE = [
               maximus dui, convallis tristique enim urna et libero.`,
     time: 'Aug 20, 500 B.C.',
   },
-  ]
-  
+]
+
+const createDreamNote = (dream) => {
+  return {
+    id: dream.id,
+    title: dream.title,
+    note: dream.note,
+    time: dream.time
+  }
+}
+
+
+
 export default (state = INITIAL_STATE, action) => {
-  switch(action.type){
-    case ADD_DREAM_NOTE: 
-      return [ ...state,  createDreamNote(action.payload, state) ];
-    case EDIT_DREAM_NOTE: 
-      return [ ...state,  editDreamNote(action.payload, state) ];
-    case DELETE_DREAM_NOTE: 
+  switch (action.type) {
+    case ADD_DREAM_NOTE:
+      console.log('adding dream')
+      return [...state, createDreamNote(action.payload, state)];
+    case EDIT_DREAM_NOTE:
+      console.log('editing dream')
+      return state.map((item) => {
+        if (item.id === action.payload.id) {
+          return { ...item, ...action.payload };
+        }
+        return item;
+      });
+    case DELETE_DREAM_NOTE:
+      console.log('deleting dream')
       return state.filter(item => item.id !== action.payload);
-    default: 
+    default:
       return state;
   }
 };
-  

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Platform} from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import Button from './Button';
 import Clock from './Clock';
@@ -19,29 +19,29 @@ class AlarmCard extends React.Component {
     this.props.toggleAlarm(this.props.id);
   }
 
-  showProps = () =>{
-    this.props.openAlarmProps(this.props.id);  
+  showProps = () => {
+    this.props.openAlarmProps(this.props.id);
   }
 
-  renderAlarmProps(){
-    return this.props.showProps ? <AlarmProps { ...this.props }/> : null; 
+  renderAlarmProps() {
+    return this.props.showProps ? <AlarmProps {...this.props} /> : null;
   }
 
   render() {
     return (
-      <View style={styles.container}  behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
-        <View style={[styles.cardContainer, {marginBottom: this.props.showProps ? 6 :  0}]}>
+      <View style={styles.container} behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
+        <View style={[styles.cardContainer, { marginBottom: this.props.showProps ? 6 : 0 }]}>
           <View style={styles.dropDownButton}>
             <Button style={styles.button} onPress={() => {
-              this.showProps();            
+              this.showProps();
             }} >...</Button>
           </View>
           <View style={styles.clockContainer}>
-            <Clock time={this.props.time} fontSize={cardHeight * .5}/>
+            <Clock time={this.props.time} fontSize={cardHeight * .5} />
           </View>
           <View style={styles.toggleSwitch}>
-            <Button style={{opacity: this.props.isOn ? 1 : .5, fontSize:cardHeight * .25}} onPress={this.props.isOn ? null : this.toggleAlarm}>on</Button>
-            <Button style={{opacity: this.props.isOn ? .5 : 1, fontSize:cardHeight * .25}} onPress={this.props.isOn ? this.toggleAlarm : null}>off</Button> 
+            <Button style={{ opacity: this.props.isOn ? 1 : .5, fontSize: cardHeight * .25 }} onPress={this.props.isOn ? null : this.toggleAlarm}>on</Button>
+            <Button style={{ opacity: this.props.isOn ? .5 : 1, fontSize: cardHeight * .25 }} onPress={this.props.isOn ? this.toggleAlarm : null}>off</Button>
           </View>
         </View>
         {this.renderAlarmProps()}
@@ -82,5 +82,5 @@ const styles = StyleSheet.create({
 
 export default connect(
   null,
-  {openAlarmProps, toggleAlarm}
-  )(AlarmCard);
+  { openAlarmProps, toggleAlarm }
+)(AlarmCard);

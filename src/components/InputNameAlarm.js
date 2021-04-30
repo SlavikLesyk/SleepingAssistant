@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextInput } from 'react-native';
+import {StyleSheet, TextInput } from 'react-native';
 import { connect } from 'react-redux';
 
 class InputNameAlarm extends React.Component {  

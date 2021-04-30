@@ -52,11 +52,23 @@ export const changeFallAsleepTime = time => {
   }
 }
 
-// export const addNewDream = id => {
-//   return {
-//     type:
-//     payload: id
-//   }
-// }
+export const addNewDream = dream => {
+  return {
+    type: ADD_DREAM_NOTE,
+    payload: dream
+  }
+}
 
-// export const 
+export const editDream = dream => {
+  return {
+    type: EDIT_DREAM_NOTE,
+    payload: dream
+  }
+}
+
+export const deleteDream = id => {
+  return { 
+    type: DELETE_DREAM_NOTE,
+    payload: id
+  }
+}

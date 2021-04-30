@@ -10,7 +10,7 @@ import { BG_COLOR_COMPONENTS, COLOR_SECONDARY, windowHeight } from '../Constants
 
 const cardHeight = windowHeight * .22;
 
-const AlarmProps = (props) =>{
+const AlarmProps = (props) => {
   const [text, setText] = useState('');
 
   const deleteAlarm = () => {
@@ -20,28 +20,28 @@ const AlarmProps = (props) =>{
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={{flex: 1}}/>
+        <View style={{ flex: 1 }} />
         <View style={styles.heading}>
-          <AppText styles={{fontSize: cardHeight * .2}}>cycle</AppText>
+          <AppText styles={{ fontSize: cardHeight * .2 }}>cycle</AppText>
         </View>
-        <View style={{flex: 1}}>          
-          <Button style ={styles.btnDelete} onPress={this.deleteAlarm}>
+        <View style={{ flex: 1 }}>
+          <Button style={styles.btnDelete} onPress={this.deleteAlarm}>
             {/* <MaterialCommunityIcons name="bell-remove-outline" size={28} color="tomato" /> */}
           </Button>
-        </View>          
+        </View>
       </View>
       <View style={styles.days}>
-        <DaysCicle activeDays={props.days} id={props.id}/>
+        <DaysCicle activeDays={props.days} id={props.id} />
       </View>
       <View style={styles.title}>
         <AppInput placeholder="name" placeholderTextColor={COLOR_SECONDARY} value={text} onChangeText={value => setText(value)} />
       </View>
       <View style={styles.recSleepTime}>
 
-      </View>        
+      </View>
     </View>
   );
- }
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -65,13 +65,13 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
-    justifyContent: 'center', 
+    justifyContent: 'center',
   },
   btnDelete: {
-    color: 'tomato', 
+    color: 'tomato',
     fontSize: 28,
     alignItems: 'center',
-    justifyContent: 'center',    
+    justifyContent: 'center',
   },
   recSleepTime: {
     flex: 1,
@@ -82,5 +82,5 @@ const styles = StyleSheet.create({
 
 export default connect(
   null,
-  {deleteAlarm}
-  )(AlarmProps);
+  { deleteAlarm }
+)(AlarmProps);

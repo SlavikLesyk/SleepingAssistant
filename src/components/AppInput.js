@@ -1,15 +1,14 @@
-import  React  from 'react';
+import React from 'react';
 import { TextInput, StyleSheet } from 'react-native';
-
 import { COLOR_SECONDARY } from '../Constants';
 
-const AppInput = (props) => {  
+const AppInput = (props) => {
   return (
-    <TextInput 
+    <TextInput
       autCapitalize='none'
-      autoCompleteType=  'off'
+      autoCompleteType='off'
       spellCheck={false}
-      { ...props} 
+      {...props}
       style={[styles.input, props.style]}
     />
   );

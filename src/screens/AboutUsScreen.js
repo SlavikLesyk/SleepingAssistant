@@ -8,8 +8,7 @@ const AboutUsScreen = ({navigation}) => {
   return (
     <AppBackground>
       <Button onPress={() => navigation.navigate('About')}>back</Button>
-    </AppBackground>
-    
+    </AppBackground>    
   );
 };
 

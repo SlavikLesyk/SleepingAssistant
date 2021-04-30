@@ -4,17 +4,17 @@ import { COLOR_MAIN } from '../Constants';
 
 const CIRCLE_RADIUS = 32;
 const LINE_WIDTH = 2;
-const PLUS_SIZE = CIRCLE_RADIUS - CIRCLE_RADIUS/3;
+const PLUS_SIZE = CIRCLE_RADIUS - CIRCLE_RADIUS / 3;
 
-const ButtonAddNew = ({ style, onPress }) =>{
-  return(
+const ButtonAddNew = ({ style, onPress }) => {
+  return (
     <View style={[styles.container, style]}>
       <TouchableOpacity onPress={onPress}>
         <View style={styles.circle}>
           <View style={styles.horizontal} />
           <View style={styles.vertical} />
-        </View> 
-       </TouchableOpacity> 
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
     borderWidth: LINE_WIDTH,
     borderColor: COLOR_MAIN,
   },
-   horizontal: {
-   height: PLUS_SIZE,
+  horizontal: {
+    height: PLUS_SIZE,
     width: LINE_WIDTH,
     backgroundColor: COLOR_MAIN
   },
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     height: LINE_WIDTH,
     width: PLUS_SIZE,
     backgroundColor: COLOR_MAIN,
-    transform: [{translateY: -(PLUS_SIZE + LINE_WIDTH / 2) / 2}]
+    transform: [{ translateY: -(PLUS_SIZE + LINE_WIDTH / 2) / 2 }]
   }
 });
 
