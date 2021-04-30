@@ -111,6 +111,8 @@ const DreamNoteScreen = (props) => {
       text === ""
       &&
       isNewDream
+      &&
+      needAdd
     );
   };
 
