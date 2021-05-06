@@ -1,10 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { BG_COLOR_COMPONENTS, COLOR_MAIN, windowHeight } from '../Constants';
+import CircleRotation from './CircleRotation';
+
+
 
 const CirclePhase = (props) => {
+  const [rotation, setRotation] = useState(0);
+  const [hours, setHours] = useState(new Date().getHours());
+  const [minutes, setMinutes] = useState(new Date().getMinutes());
+
+  useEffect(() => {
+    const timerID = setInterval( () => tick(), 500 );
+    return function cleanup() {
+        clearInterval(timerID);
+      };
+  });
+
+  const tick = () => {
+    setRotation((new Date().getHours() * 60 + new Date().getMinutes() + props.fallAsleepTime) / 2);
+    setHours(new Date().getHours());
+    setMinutes(new Date().getMinutes());  
+  };
+
   return (
-    <View style={[styles.circle, { transform: [{ rotate: (new Date().getHours() * 60 + new Date().getMinutes() + props.fallAsleepTime) / 2 + "deg" }] }]}>
+    <View style={[styles.circle, { transform: [{ rotate:  rotation + 'deg'}] }]}>
       <View style={[styles.circleInnerWrap, styles.circle1]}>
         <View style={[styles.innerCircle, styles.innerCircleSmall]}></View>
       </View>
@@ -28,7 +48,9 @@ const CirclePhase = (props) => {
       </View>
       <View style={[styles.circleInnerWrap, styles.circle8]}>
         <View style={styles.innerCircle}></View>
-      </View>
+      </View>      
+       
+        <CircleRotation hours={hours} minutes={minutes} rotation={rotation} />
     </View>
   )
 }
@@ -40,6 +62,9 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: COLOR_MAIN,
     borderRadius: windowHeight * .2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'tomato'
   },
   circleInnerWrap: {
     position: 'absolute',
@@ -56,14 +81,14 @@ const styles = StyleSheet.create({
     borderRadius: windowHeight * .015,
     position: 'absolute',
     backgroundColor: BG_COLOR_COMPONENTS,
-    left: windowHeight * .2 + 1,
+    left: windowHeight * .185 + 1,
     top: -windowHeight * .015
   },
   innerCircleSmall: {
     width: windowHeight * .02,
     height: windowHeight * .02,
     top: -windowHeight * .01,
-    left: windowHeight * .2
+    left: windowHeight * .19
 
   },
   circle1: {

@@ -1,6 +1,6 @@
-import * as React from 'react'
+import * as React from 'react';
 import { StyleSheet } from 'react-native';
-import Animated, { useAnimatedProps } from 'react-native-reanimated'
+import Animated, { useAnimatedProps } from 'react-native-reanimated';
 import { TextInput } from 'react-native-gesture-handler';
 import { COLOR_MAIN } from '../Constants';
 

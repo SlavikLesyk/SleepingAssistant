@@ -85,11 +85,9 @@ class PlaylistScreen extends React.Component {
     if(this.volume >= 0){
       this.player.volume = this.volume;
       this.fadeOutTimer = setTimeout(this.fadeOut, .02 * min * 1000, min);
-      console.log("tick")
     } else {
       this.stop();
       this.setState({currentSound: null});
-      console.log('stop')
     }
   }
 

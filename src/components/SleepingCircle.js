@@ -1,8 +1,7 @@
 import React from "react";
-import { Animated, View, StyleSheet, PanResponder, Text, ImageBackground, Dimensions } from "react-native";
+import { Animated, View, StyleSheet, PanResponder, ImageBackground } from "react-native";
 import { connect } from 'react-redux';
 import { changeFallAsleepTime } from '../actions';
-import { windowWidth } from '../Constants'; 
 
 class SleepingCircle extends React.Component {  
   startingPosition = 0;

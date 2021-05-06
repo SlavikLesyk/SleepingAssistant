@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Modal } from 'react-native';
+import { windowHeight } from '../Constants';
 import AppText from './AppText';
 import Button from './Button';
 
@@ -17,8 +18,10 @@ export default function ModalAsk(props) {
         transparent={true}
         visible={visible}>
         <View style={styles.innerContainer}>
-          <Button onPress={visibleHandler}>X</Button>
-          <AppText>{title}</AppText>
+          <View style={styles.closeWrap}>
+            <Button onPress={visibleHandler} style={styles.btnClose}>X</Button>
+          </View>
+          <AppText style={styles.title}>{title}</AppText>
           <View style={styles.answers}>
             <Button onPress={() => {
               yesFunc ? yesFunc() : null;
@@ -53,6 +56,21 @@ const styles = StyleSheet.create({
   },
   answers: {
     flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: 200
+  },
+  closeWrap: {
+    width: 300,
+    alignItems: 'flex-end',
+  },
+  btnClose: {
+    marginBottom: windowHeight * .05,
+    textAlign: 'right',
+  },
+  title: {
+    textAlign: 'center',
+    marginBottom: windowHeight * .05,
+    width: 300,
   }
 });
 

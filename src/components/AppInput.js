@@ -17,8 +17,6 @@ const AppInput = (props) => {
 
 const styles = StyleSheet.create({
   input: {
-    flex: 1,
-    textAlign: 'center',
     fontFamily: 'zekton',
     color: COLOR_SECONDARY,
     fontSize: 18,

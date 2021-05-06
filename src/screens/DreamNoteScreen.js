@@ -27,8 +27,9 @@ const DreamNoteScreen = (props) => {
     addNewDream
   } = props;
   const { isNewDream } = route.params;
+
   const date = isNewDream ? new Date().toLocaleDateString() : dream.time;
-  const DEFAULT_TITLE = 'Another Dream Note';
+  const DEFAULT_TITLE = 'Fuck the World!';
 
   const [header, setHeader] = useState(isNewDream ? DEFAULT_TITLE : dream.title);
   const [text, setText] = useState(dream ? dream.note : "");
@@ -109,8 +110,6 @@ const DreamNoteScreen = (props) => {
       (header === DEFAULT_TITLE || header === '')
       &&
       text === ""
-      &&
-      isNewDream
       &&
       needAdd
     );

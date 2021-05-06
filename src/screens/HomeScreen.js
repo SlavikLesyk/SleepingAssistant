@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import ButtonAddNew from '../components/ButtonAddNew';
 import Button from '../components/Button';
 import CirclePhase from '../components/CirclePhase';
-import AppText from '../components/AppText';
 import AppBackground from '../components/AppBackground';
 import { addAlarm } from '../actions';
 import { windowHeight } from '../Constants';
@@ -60,14 +59,6 @@ class HomeScreen extends React.Component {
               >
                 <CirclePhase fallAsleepTime={this.props.fallAsleepTime} />
               </KeyboardAvoidingView>
-
-              <AppText style={{
-                flex: 1,
-                position: 'absolute',
-                top: 30
-              }}>
-                {this.state.time.toLocaleTimeString()}
-              </AppText>
               <View style={styles.help}>
                 <Button style={{ fontSize: 24, paddingHorizontal: 10 }}>?</Button>
               </View>
