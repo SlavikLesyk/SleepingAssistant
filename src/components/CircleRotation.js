@@ -35,7 +35,6 @@ function CircleRotation({ deg, hours, minutes, rotation }) {
         styles.circle,
         {
           transform: [{ rotate: `${-fallTime}deg` }],
-          backgroundColor: 'lime'
         },
       ]}>
       <View style={styles.innerMarker} />

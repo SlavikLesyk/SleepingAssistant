@@ -2,60 +2,85 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { BG_COLOR_COMPONENTS, COLOR_MAIN, windowHeight } from '../Constants';
 import CircleRotation from './CircleRotation';
-
-
+import { connect } from 'react-redux';
 
 const CirclePhase = (props) => {
+  const {alarmTime} = props;
   const [rotation, setRotation] = useState(0);
   const [hours, setHours] = useState(new Date().getHours());
   const [minutes, setMinutes] = useState(new Date().getMinutes());
 
   useEffect(() => {
-    const timerID = setInterval( () => tick(), 500 );
+    const timerID = setInterval(() => tick(), 500);
     return function cleanup() {
-        clearInterval(timerID);
-      };
+      clearInterval(timerID);
+    };
   });
 
   const tick = () => {
     setRotation((new Date().getHours() * 60 + new Date().getMinutes() + props.fallAsleepTime) / 2);
     setHours(new Date().getHours());
-    setMinutes(new Date().getMinutes());  
+    setMinutes(new Date().getMinutes());
   };
 
   return (
-    <View style={[styles.circle, { transform: [{ rotate:  rotation + 'deg'}] }]}>
-      <View style={[styles.circleInnerWrap, styles.circle1]}>
-        <View style={[styles.innerCircle, styles.innerCircleSmall]}></View>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={[styles.outerCircle, {
+        transform: [{rotate: (alarmTime.hours * 15 + alarmTime.minutes) / 2 + 'deg'}]
+      }]}>
+      <View style={styles.marker} />
       </View>
-      <View style={[styles.circleInnerWrap, styles.circle2]}>
-        <View style={styles.innerCircle}></View>
-      </View>
-      <View style={[styles.circleInnerWrap, styles.circle3]}>
-        <View style={styles.innerCircle}></View>
-      </View>
-      <View style={[styles.circleInnerWrap, styles.circle4]}>
-        <View style={styles.innerCircle}></View>
-      </View>
-      <View style={[styles.circleInnerWrap, styles.circle5]}>
-        <View style={styles.innerCircle}></View>
-      </View>
-      <View style={[styles.circleInnerWrap, styles.circle6]}>
-        <View style={styles.innerCircle}></View>
-      </View>
-      <View style={[styles.circleInnerWrap, styles.circle7]}>
-        <View style={styles.innerCircle}></View>
-      </View>
-      <View style={[styles.circleInnerWrap, styles.circle8]}>
-        <View style={styles.innerCircle}></View>
-      </View>      
-       
+      <View style={[styles.circle, { transform: [{ rotate: rotation + 'deg' }] }]}>
+        <View style={[styles.circleInnerWrap, styles.circle1]}>
+          <View style={[styles.innerCircle, styles.innerCircleSmall]}></View>
+        </View>
+        <View style={[styles.circleInnerWrap, styles.circle2]}>
+          <View style={styles.innerCircle}></View>
+        </View>
+        <View style={[styles.circleInnerWrap, styles.circle3]}>
+          <View style={styles.innerCircle}></View>
+        </View>
+        <View style={[styles.circleInnerWrap, styles.circle4]}>
+          <View style={styles.innerCircle}></View>
+        </View>
+        <View style={[styles.circleInnerWrap, styles.circle5]}>
+          <View style={styles.innerCircle}></View>
+        </View>
+        <View style={[styles.circleInnerWrap, styles.circle6]}>
+          <View style={styles.innerCircle}></View>
+        </View>
+        <View style={[styles.circleInnerWrap, styles.circle7]}>
+          <View style={styles.innerCircle}></View>
+        </View>
+        <View style={[styles.circleInnerWrap, styles.circle8]}>
+          <View style={styles.innerCircle}></View>
+        </View>
+
         <CircleRotation hours={hours} minutes={minutes} rotation={rotation} />
+      </View>
+
     </View>
+
+      
   )
 }
 
 const styles = StyleSheet.create({
+  outerCircle: {
+    position: 'absolute',
+    width: windowHeight * .50,
+    height: windowHeight * .50,
+    borderRadius: windowHeight * .25,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  marker: {
+    height: 15,
+    width: 3,
+    backgroundColor: COLOR_MAIN,
+    position: 'absolute',
+    top: 0,
+  },
   circle: {
     width: windowHeight * .4,
     height: windowHeight * .4,
@@ -64,7 +89,6 @@ const styles = StyleSheet.create({
     borderRadius: windowHeight * .2,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'tomato'
   },
   circleInnerWrap: {
     position: 'absolute',
@@ -115,7 +139,13 @@ const styles = StyleSheet.create({
   circle8: {
     transform: [{ rotate: '315deg' }]
   },
+});
 
-})
 
-export default CirclePhase;
+const mapStateToProps = (state) => {
+  return { 
+    alarmTime: state.alarmTime,
+  };
+}
+
+export default connect(mapStateToProps, {} )(CirclePhase);

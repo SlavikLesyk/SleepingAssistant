@@ -17,10 +17,9 @@ import { connect } from 'react-redux';
 import { setCurrentAlarmMinutes, setCurrentAlarmHours} from '../actions'
 
 function Spinner ({ numbers, alignItems, setCurrentAlarmMinutes, setCurrentAlarmHours}) {  
-  const [lastPosY, setLastPosY] = useState(0);
+  let currentValue = '00';
   
   const translateY = useSharedValue(0);
-  const isSpinning = false;
   const oneStepValue = 80;
 
   const onGestureEvent = useAnimatedGestureHandler({
@@ -46,14 +45,20 @@ function Spinner ({ numbers, alignItems, setCurrentAlarmMinutes, setCurrentAlarm
     return step < 10 ? `0${step}` : String(step);
   });
 
-  const recordResult = (result) => {
+  const recordResult = () => {
     let lap = Math.ceil(translateY.value / (oneStepValue * numbers));
     let step = Math.ceil(translateY.value / oneStepValue);    
 
     step = Math.abs(step - lap * numbers);
+
+    if(currentValue !==  (step < 10 ? `0${step}` : String(step))){
+    currentValue = step < 10 ? `0${step}` : String(step);
     numbers === 60 
-    ? setCurrentAlarmMinutes(step < 10 ? `0${step}` : String(step))
-    : setCurrentAlarmHours(step < 10 ? `0${step}` : String(step))
+    ? setCurrentAlarmMinutes(currentValue)  
+    : setCurrentAlarmHours(currentValue)
+  }
+
+
   };
 
   useDerivedValue(() => {
@@ -102,9 +107,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     left: 0,
-    top: 0,
+    top: - windowHeight * .15,
     bottom: 0,
-    zIndex: 100
+    zIndex: 100,
+    height: windowHeight * .45,
+    // backgroundColor: 'tomato'
   },
   wheal:{
     justifyContent: 'center',

@@ -10,24 +10,20 @@ import { addAlarm } from '../actions';
 import { windowHeight } from '../Constants';
 import ClockSpinner from '../components/ClockSpinner';
 
-class HomeScreen extends React.Component {
-  state = {
-    time: new Date(),
-    hours: '12',
-    minutes: '00',
-  }
-
-  addAlarm = () => {
-    this.props.addAlarm(`${this.state.hours}:${this.state.minutes}`)
+function HomeScreen(props) {
+ const { 
+  fallAsleepTime,
+  navigation,
+  alarmTime,
+  addAlarm,
+  } = props;
+  const onPressAddAlarm = () => {
+    addAlarm(`${alarmTime.hours}:${alarmTime.minutes}`)
   };
-
-  changeTime = (type, value) => this.setState({ [type]: value });
-
-  render() {
     return (
       <GestureRecognizer
-        onSwipeLeft={() => this.props.navigation.navigate('Alarm')}
-        onSwipeRight={() => this.props.navigation.navigate('Start')}
+        onSwipeLeft={() => navigation.navigate('Alarm')}
+        onSwipeRight={() => navigation.navigate('Start')}
         style={{ flex: 1 }}
       >
         <AppBackground>
@@ -36,28 +32,19 @@ class HomeScreen extends React.Component {
               <ButtonAddNew
                 style={{ flex: 1 }}
                 onPress={() => {
-                  this.props.navigation.navigate('Alarm');
-                  this.addAlarm();
+                  navigation.navigate('Alarm');
+                  onPressAddAlarm();
                 }}
               />
               <ClockSpinner style={{ flex: 2 }} />
             </View>
             <View style={styles.circle}>
-              <ImageBackground
-                source={require('../../assets/img/SleepAlarmMarker.png')}
-                style={{
-                  transform: [
-                    { rotate: (this.state.hours * 15 + this.state.minutes) / 2 + "deg" },
-                    { scale: 1.25 }
-                  ]
-                }}
-              />
               <KeyboardAvoidingView
                 behavior={Platform.OS == "ios" ? "padding" : "height"}
                 keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 20}
                 enabled={Platform.OS === "ios" ? true : false}
               >
-                <CirclePhase fallAsleepTime={this.props.fallAsleepTime} />
+                <CirclePhase fallAsleepTime={fallAsleepTime} />
               </KeyboardAvoidingView>
               <View style={styles.help}>
                 <Button style={{ fontSize: 24, paddingHorizontal: 10 }}>?</Button>
@@ -69,7 +56,7 @@ class HomeScreen extends React.Component {
         </AppBackground>
       </GestureRecognizer>
     );
-  }
+  
 }
 
 const styles = StyleSheet.create({
@@ -82,6 +69,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   circle: {
+    marginTop: 50,
     flex: 8,
     justifyContent: 'center',
     alignItems: 'center'
@@ -101,7 +89,10 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  return { fallAsleepTime: state.fallAsleepTime };
+  return { 
+    fallAsleepTime: state.fallAsleepTime,
+    alarmTime: state.alarmTime,
+  };
 }
 
 export default connect(
