@@ -1,18 +1,23 @@
-import React, {useState} from 'react';
-import { Text, View, StyleSheet, FlatList, Dimensions } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet } from 'react-native';
 import Animated, { 
   useSharedValue,
   useAnimatedGestureHandler,
   useAnimatedStyle,
   withDecay,
   cancelAnimation,
-  useDerivedValue
+  useDerivedValue,
+  runOnJS,
+  set
 } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import AnimatedText from './AnimatedText';
 import { windowHeight } from '../Constants'; 
+import { connect } from 'react-redux';
+import { setCurrentAlarmMinutes, setCurrentAlarmHours} from '../actions'
 
-export default function({ numbers = 24, alignItems = 'center'}) {  
+function Spinner ({ numbers, alignItems, setCurrentAlarmMinutes, setCurrentAlarmHours}) {  
+  const [lastPosY, setLastPosY] = useState(0);
   
   const translateY = useSharedValue(0);
   const isSpinning = false;
@@ -26,37 +31,48 @@ export default function({ numbers = 24, alignItems = 'center'}) {
     onActive: (event,ctx) => {
       translateY.value = event.translationY + ctx.offsetY;
     },
-    onEnd: (event, ctx) => {
+    onEnd: (event, ctx) => {      
       translateY.value = withDecay({
-        velocity: event.velocityY
+        velocity: event.velocityY        
       });
     }
-  });
+  }); 
   
   const currentText = useDerivedValue(() => {
     let lap = Math.ceil(translateY.value / (oneStepValue * numbers));
-    let step = Math.ceil(translateY.value / oneStepValue);
+    let step = Math.ceil(translateY.value / oneStepValue);    
 
     step = Math.abs(step - lap * numbers);
-
-     return step < 10 ? `0${step}` : String(step);
+    return step < 10 ? `0${step}` : String(step);
   });
+
+  const recordResult = (result) => {
+    let lap = Math.ceil(translateY.value / (oneStepValue * numbers));
+    let step = Math.ceil(translateY.value / oneStepValue);    
+
+    step = Math.abs(step - lap * numbers);
+    numbers === 60 
+    ? setCurrentAlarmMinutes(step < 10 ? `0${step}` : String(step))
+    : setCurrentAlarmHours(step < 10 ? `0${step}` : String(step))
+  };
+
+  useDerivedValue(() => {
+    runOnJS(recordResult)(translateY.value);
+  });  
 
   const nextText = useDerivedValue(() => {
     let step = Math.ceil((translateY.value + oneStepValue) / oneStepValue);
     let lap = Math.ceil((translateY.value + oneStepValue) / (oneStepValue * numbers));
 
-    console.log(lap)
     step = Math.abs(step - lap * numbers);
-
-     return step < 10 ? `0${step}` : String(step)
+ 
+    return step < 10 ? `0${step}` : String(step)
   })
 
   const prevText = useDerivedValue(() => {
     let step = Math.ceil((translateY.value - oneStepValue) / oneStepValue);
     let lap = Math.ceil((translateY.value - oneStepValue) / (oneStepValue * numbers));
 
-    console.log(lap)
     step = Math.abs(step - lap * numbers);
 
      return step < 10 ? `0${step}` : String(step)
@@ -75,7 +91,6 @@ export default function({ numbers = 24, alignItems = 'center'}) {
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   spinner: {
@@ -110,3 +125,4 @@ const styles = StyleSheet.create({
   }
 });
 
+export default connect(null, {setCurrentAlarmMinutes, setCurrentAlarmHours})(Spinner)

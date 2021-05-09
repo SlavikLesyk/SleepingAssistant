@@ -8,6 +8,8 @@ import {
   ADD_DREAM_NOTE, 
   DELETE_DREAM_NOTE,
   EDIT_DREAM_NOTE,
+  SET_CURRENT_ALARM_HOURS,
+  SET_CURRENT_ALARM_MINUTES,
 } from './types';
 
 export const toggleAlarm = id => {
@@ -70,5 +72,20 @@ export const deleteDream = id => {
   return { 
     type: DELETE_DREAM_NOTE,
     payload: id
+  }
+}
+
+export const setCurrentAlarmHours = value => {
+  return {
+    type: SET_CURRENT_ALARM_HOURS,
+    payload: value 
+  }
+}
+
+export const setCurrentAlarmMinutes = value => {
+  console.log(value)
+  return {
+    type: SET_CURRENT_ALARM_MINUTES,
+    payload: value 
   }
 }
