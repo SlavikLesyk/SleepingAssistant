@@ -1,7 +1,6 @@
 import { SET_CURRENT_ALARM_HOURS, SET_CURRENT_ALARM_MINUTES } from '../actions/types';
 
 export default (state = {hours: '00', minutes: '00'}, action) => {
-  console.log(state)
   switch(action.type){
     case SET_CURRENT_ALARM_HOURS:
       return {

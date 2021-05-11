@@ -111,7 +111,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     zIndex: 100,
     height: windowHeight * .45,
-    // backgroundColor: 'tomato'
   },
   wheal:{
     justifyContent: 'center',

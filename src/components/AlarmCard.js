@@ -10,11 +10,7 @@ import { windowHeight, BG_COLOR_COMPONENTS } from '../Constants';
 const cardHeight = (windowHeight - 25) * .15;
 
 class AlarmCard extends React.Component {
-  state = {
-    hours: this.props.time.split(':')[0],
-    minutes: this.props.time.split(':')[1],
-  }
-
+  
   toggleAlarm = () => {
     this.props.toggleAlarm(this.props.id);
   }
@@ -37,7 +33,7 @@ class AlarmCard extends React.Component {
             }} >...</Button>
           </View>
           <View style={styles.clockContainer}>
-            <Clock time={this.props.time} fontSize={cardHeight * .5} />
+            <Clock time={this.props.time} fontSize={cardHeight * .5} id={this.props.id} />
           </View>
           <View style={styles.toggleSwitch}>
             <Button style={{ opacity: this.props.isOn ? 1 : .5, fontSize: cardHeight * .25 }} onPress={this.props.isOn ? null : this.toggleAlarm}>on</Button>

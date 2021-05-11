@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ImageBackground, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import GestureRecognizer from '../utility/swipe-gestures';
 import { connect } from 'react-redux';
 import ButtonAddNew from '../components/ButtonAddNew';
@@ -17,9 +17,11 @@ function HomeScreen(props) {
   alarmTime,
   addAlarm,
   } = props;
+
   const onPressAddAlarm = () => {
     addAlarm(`${alarmTime.hours}:${alarmTime.minutes}`)
   };
+  
     return (
       <GestureRecognizer
         onSwipeLeft={() => navigation.navigate('Alarm')}

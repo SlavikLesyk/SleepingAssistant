@@ -52,10 +52,8 @@ const createDreamNote = (dream) => {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case ADD_DREAM_NOTE:
-      console.log('adding dream')
       return [...state, createDreamNote(action.payload, state)];
     case EDIT_DREAM_NOTE:
-      console.log('editing dream')
       return state.map((item) => {
         if (item.id === action.payload.id) {
           return { ...item, ...action.payload };
@@ -63,7 +61,6 @@ export default (state = INITIAL_STATE, action) => {
         return item;
       });
     case DELETE_DREAM_NOTE:
-      console.log('deleting dream')
       return state.filter(item => item.id !== action.payload);
     default:
       return state;

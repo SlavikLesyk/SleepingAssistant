@@ -23,7 +23,9 @@ class StartingScreen extends React.Component {
             <AppText>{this.props.fallAsleepTime}</AppText>
             <AppText>min</AppText>
           </View>
-          <SleepingCircle />
+          <View style={styles.circle}>
+            <SleepingCircle />
+          </View>
           <View style={styles.button}>
             <Button onPress={() => this.props.navigation.navigate('Home') }>confirm</Button>
           </View>
@@ -36,11 +38,11 @@ class StartingScreen extends React.Component {
 const styles = StyleSheet.create({
   container:{
     flex: 1,
+    paddingTop: windowHeight * .2,
     alignItems: 'center'
   },
   header: {
-    flex: 1,
-    paddingTop: windowHeight * .2,
+    flex: 1,    
     alignItems: 'center',
   },
   timer: {
@@ -49,6 +51,9 @@ const styles = StyleSheet.create({
   },
   button: { 
     flex: 1
+  },
+  circle: {
+    flex: 3,
   }
 });
 

@@ -2,107 +2,69 @@ import React from "react";
 import { Animated, View, StyleSheet, PanResponder, ImageBackground } from "react-native";
 import { connect } from 'react-redux';
 import { changeFallAsleepTime } from '../actions';
-
-class SleepingCircle extends React.Component {  
-  startingPosition = 0;
-  
-  pan = new Animated.ValueXY();
-
-  setTime = (value) => {
-    value = value < -200 ? -200 :  value  
-    this.props.changeFallAsleepTime(((value + 200) / 8 ).toFixed(0));
-  }
-
-  panResponder = PanResponder.create({
-    onMoveShouldSetPanResponder: () => true,
-    onPanResponderGrant: () => {
-      let startingVelueOffset = this.pan.x._value;
-
-      if(startingVelueOffset < - 200){
-        startingVelueOffset = -200
-      }
-
-      if(startingVelueOffset > 200){
-        startingVelueOffset = 200
-      }
-
-      this.pan.setOffset({
-        x: startingVelueOffset,
-        y: this.pan.y._value
-      });
-      console.log(this.pan.x._value)
-    },
-    onPanResponderMove: (e, gestureState) => {
-      this.setTime(this.startingPosition + gestureState.dx);
-      console.log(gestureState);
-      Animated.event([ 
-        null, 
-        { dx: this.pan.x, dy: this.pan.y }
-      ], 
-        {useNativeDriver: false}
-      )(e, gestureState);
-    },
-    onPanResponderRelease: (e, gestureState) => {
-      this.startingPosition = this.startingPosition + gestureState.dx;
-      this.startingPosition = (this.startingPosition < -200) ? -200 : this.startingPosition
-      console.log(this.pan.x._value)
-      this.pan.flattenOffset();  
-    } 
-  }); 
+import { windowHeight } from "../Constants";
+import ValueSlider from './ValueSlider';
 
 
-  circleRotation = () => {
-    const rotate = this.pan.x.interpolate({
-      inputRange: [-200, 0, 200],
-      outputRange: ['-9deg', '0deg', '10deg'],
-      extrapolate: 'clamp',      
-    });
+function SleepingCircle() {
+  return (
+    <View style={styles.container}>
+      <View style={styles.megaCircle}>
+          <View style={styles.dote} />
+          <View style={styles.innerCircle}>
+            <View style={styles.marker} /> 
+          </View>
 
-    return { transform: [{ rotate }],
-      height: 1500,
-      weight: 1502,
-
-    };
-  }
-
-  render() {
-    {this.props}
-    return (
-      <View style={styles.container}>
-        <View style={styles.control} {...this.panResponder.panHandlers}>
-          <Animated.View 
-            style={ this.circleRotation() }  >
-            <ImageBackground source= {require('../../assets/img/SleepingCircle.png')}  style={styles.circle} />
-          </Animated.View>        
         </View>
-        <View style={styles.start} />
-      </View>
-    );
-  }
+      <View style={styles.start} />
+    </View >
+  );
+
 }
 
 const styles = StyleSheet.create({
-  container: {
+ container: {
     flex: 1,
-    justifyContent: 'center',
-  }, 
-  control: {
-    flex: 1,
-    paddingVertical: 70,
-    top: -30,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    backgroundColor: 'gold',
+    paddingTop: '20%'
   },
-  circle: {
-    width: 1500, 
-    height: 1502 , 
+  megaCircle: {
+    width: 1500,
+    height: 1500,
+    borderRadius: 750,
+    borderWidth: 2,
+    borderColor: 'aqua',
+    alignItems: 'center',
   },
-  start:{
-    width: 5,
-    height: 40,
-    backgroundColor: '#7ab7e8',
-    left: 620,
-    top: -100,
-    transform: [{rotate: '-10deg'}]
-    
+  innerCircle: {
+    width: 1500,
+    height: 1500,
+    borderRadius: 750,
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    top: 15,
+    transform: [{
+      rotate: '-12deg'
+    }]
+  },
+  dote: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: 'aqua',
+    position: 'absolute',
+    backgroundColor: 'tomato',
+    top: -12,
+  },
+  marker: {
+    width: 4,
+    height: 25,
+    borderColor: 'aqua',
+    backgroundColor: 'tomato',
+    top: 0,
   }
 });
 

@@ -35,7 +35,6 @@ function ValueSlider() {
     },
     onEnd: () => {
       isSliding.value = false;
-      console.log(1 + translateX.value / (sliderWidth * .8))
     }
   });
 

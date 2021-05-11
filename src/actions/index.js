@@ -1,11 +1,12 @@
 import {
   TOGGLE_ALARM,
   ADD_ALARM,
+  EDIT_ALARM,
   DELETE_ALARM,
   OPEN_ALARM_PROPS,
   ACTIVATE_DAY,
   CHANGE_FALL_ASLEEP_TIME,
-  ADD_DREAM_NOTE, 
+  ADD_DREAM_NOTE,
   DELETE_DREAM_NOTE,
   EDIT_DREAM_NOTE,
   SET_CURRENT_ALARM_HOURS,
@@ -13,6 +14,7 @@ import {
 } from './types';
 
 export const toggleAlarm = id => {
+  console.log('toggle run')
   return{
     type: TOGGLE_ALARM,
     payload: id
@@ -23,6 +25,14 @@ export const addAlarm = time => {
   return {
     type: ADD_ALARM,
     payload: time 
+  };
+};
+
+export const editAlarm = (id, time) => {
+  console.log('edit run')
+  return {
+    type: EDIT_ALARM,
+    payload: { id, time }
   };
 };
 
