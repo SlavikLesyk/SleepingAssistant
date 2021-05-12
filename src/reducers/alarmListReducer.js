@@ -47,7 +47,6 @@ const createAlarm = (time, state) => {
 }
 
 export default (state = INITIAL_STATE, action) => {
-  console.log(state)
   switch (action.type) {
     case ADD_ALARM:
       return [...state, createAlarm(action.payload, state)];
