@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import Animated, {
+import Animated, { 
   useSharedValue,
   useAnimatedGestureHandler,
   useAnimatedStyle,
@@ -12,34 +12,34 @@ import Animated, {
 } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import AnimatedText from './AnimatedText';
-import { windowHeight } from '../Constants';
+import { windowHeight } from '../Constants'; 
 import { connect } from 'react-redux';
-import { setCurrentAlarmMinutes, setCurrentAlarmHours } from '../actions'
+import { setCurrentAlarmMinutes, setCurrentAlarmHours} from '../actions'
 
-function Spinner({ numbers, alignItems, setCurrentAlarmMinutes, setCurrentAlarmHours }) {
+function Spinner ({ numbers, alignItems, setCurrentAlarmMinutes, setCurrentAlarmHours}) {  
   let currentValue = '00';
-
+  
   const translateY = useSharedValue(0);
   const oneStepValue = 80;
 
   const onGestureEvent = useAnimatedGestureHandler({
-    onStart: (_, ctx) => {
+    onStart: (_,ctx) => {
       cancelAnimation(translateY);
       ctx.offsetY = translateY.value;
     },
-    onActive: (event, ctx) => {
+    onActive: (event,ctx) => {
       translateY.value = event.translationY + ctx.offsetY;
     },
-    onEnd: (event, ctx) => {
+    onEnd: (event, ctx) => {      
       translateY.value = withDecay({
-        velocity: event.velocityY
+        velocity: event.velocityY        
       });
     }
-  });
-
+  }); 
+  
   const currentText = useDerivedValue(() => {
     let lap = Math.ceil(translateY.value / (oneStepValue * numbers));
-    let step = Math.ceil(translateY.value / oneStepValue);
+    let step = Math.ceil(translateY.value / oneStepValue);    
 
     step = Math.abs(step - lap * numbers);
     return step < 10 ? `0${step}` : String(step);
@@ -47,28 +47,30 @@ function Spinner({ numbers, alignItems, setCurrentAlarmMinutes, setCurrentAlarmH
 
   const recordResult = () => {
     let lap = Math.ceil(translateY.value / (oneStepValue * numbers));
-    let step = Math.ceil(translateY.value / oneStepValue);
+    let step = Math.ceil(translateY.value / oneStepValue);    
 
     step = Math.abs(step - lap * numbers);
 
-    if (currentValue !== (step < 10 ? `0${step}` : String(step))) {
-      currentValue = step < 10 ? `0${step}` : String(step);
-      numbers === 60
-        ? setCurrentAlarmMinutes(currentValue)
-        : setCurrentAlarmHours(currentValue)
-    }
+    if(currentValue !==  (step < 10 ? `0${step}` : String(step))){
+    currentValue = step < 10 ? `0${step}` : String(step);
+    numbers === 60 
+    ? setCurrentAlarmMinutes(currentValue)  
+    : setCurrentAlarmHours(currentValue)
+  }
+
+
   };
 
   useDerivedValue(() => {
     runOnJS(recordResult)(translateY.value);
-  });
+  });  
 
   const nextText = useDerivedValue(() => {
     let step = Math.ceil((translateY.value + oneStepValue) / oneStepValue);
     let lap = Math.ceil((translateY.value + oneStepValue) / (oneStepValue * numbers));
 
     step = Math.abs(step - lap * numbers);
-
+ 
     return step < 10 ? `0${step}` : String(step)
   })
 
@@ -78,18 +80,18 @@ function Spinner({ numbers, alignItems, setCurrentAlarmMinutes, setCurrentAlarmH
 
     step = Math.abs(step - lap * numbers);
 
-    return step < 10 ? `0${step}` : String(step)
+     return step < 10 ? `0${step}` : String(step)
   })
 
   return (
-    <View style={[styles.spinner, { alignItems: alignItems }]}>
+    <View style={[styles.spinner, { alignItems: alignItems}]}>
       <PanGestureHandler onGestureEvent={onGestureEvent}>
-        <Animated.View style={styles.controlArea} />
+        <Animated.View style={styles.controlArea} /> 
       </PanGestureHandler>
       <View style={styles.wheal}>
-        <AnimatedText text={nextText} style={[styles.textSecondary, styles.textTop]} />
-        <AnimatedText text={currentText} style={styles.textMain} />
-        <AnimatedText text={prevText} style={[styles.textSecondary, styles.textBottom]} />
+        <AnimatedText text={nextText} style={[styles.textSecondary, styles.textTop]}/>
+        <AnimatedText text={currentText} style={styles.textMain}/>
+        <AnimatedText text={prevText} style={[styles.textSecondary, styles.textBottom]}/>
       </View>
     </View>
   );
@@ -101,7 +103,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-end',
   },
-  controlArea: {
+  controlArea:{
     position: 'absolute',
     right: 0,
     left: 0,
@@ -110,9 +112,9 @@ const styles = StyleSheet.create({
     zIndex: 100,
     height: windowHeight * .45,
   },
-  wheal: {
+  wheal:{
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems : 'center'
   },
   textMain: {
     fontSize: windowHeight * .1,
@@ -129,4 +131,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(null, { setCurrentAlarmMinutes, setCurrentAlarmHours })(Spinner)
+export default connect(null, {setCurrentAlarmMinutes, setCurrentAlarmHours})(Spinner)

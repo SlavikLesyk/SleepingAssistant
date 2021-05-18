@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     fontFamily: 'zekton',
     color: COLOR_MAIN,
     fontSize: 18,
-    letterSpacing: 5
+    letterSpacing: 4
   }
 });
 

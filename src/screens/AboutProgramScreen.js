@@ -4,28 +4,26 @@ import GestureRecognizer from '../utility/swipe-gestures';
 import AppBackground from '../components/AppBackground';
 import Button from '../components/Button';
 import { windowHeight } from '../Constants';
+import AnimationMainNode from '../components/mainScreenComponents/AnimationMainNode';
 
-export default function AboutProgramScreen( props ) {
+export default function AboutProgramScreen(props) {
   const { navigation } = props
 
   return (
     <GestureRecognizer onSwipeRight={() => navigation.navigate('DreamsList')} style={{ flex: 1 }}>
       <AppBackground>
-        <Button 
-          onPress={() => {
-            navigation.navigate('AboutUs')
-          }}
-          style={styles.btn}
-        >
-          naivebeam
-        </Button>
+        <AnimationMainNode navigation={navigation} />
       </AppBackground>
     </GestureRecognizer>
   );
 };
 
 const styles = StyleSheet.create({
-  btn:{
-    marginTop: windowHeight * .4 
+  btn: {
+  },
+
+  control: {
+    flex: 10,
+    backgroundColor: 'blue'
   }
 });

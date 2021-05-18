@@ -14,7 +14,7 @@ import {
 } from './types';
 
 export const toggleAlarm = id => {
-  console.log('toggle run')
+
   return{
     type: TOGGLE_ALARM,
     payload: id
@@ -29,7 +29,6 @@ export const addAlarm = time => {
 };
 
 export const editAlarm = (id, time) => {
-  console.log('edit run')
   return {
     type: EDIT_ALARM,
     payload: { id, time }
@@ -58,6 +57,7 @@ export const activateDay = (id, index) => {
 }
 
 export const changeFallAsleepTime = time => {
+  console.log(time)
   return { 
     type: CHANGE_FALL_ASLEEP_TIME,
     payload: time
@@ -86,6 +86,7 @@ export const deleteDream = id => {
 }
 
 export const setCurrentAlarmHours = value => {
+  console.log(value)
   return {
     type: SET_CURRENT_ALARM_HOURS,
     payload: value 
