@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-import Button from '../components/Button';
-import { activateDay} from '../actions';
+import Button from '../Button';
+import { activateDay} from '../../actions';
 
 class DaysCicle extends React.Component {  
   renderDays = (activeDays) => { 
@@ -20,12 +20,20 @@ class DaysCicle extends React.Component {
 
   render() {
     return(
-      this.renderDays(this.props.activeDays)
+      <View style={styles.container}>
+        {this.renderDays(this.props.activeDays)}
+      </View>
     );
   }
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  }
+});
 
 export default connect(
   null,

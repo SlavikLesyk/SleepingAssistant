@@ -75,6 +75,7 @@ const DreamNoteScreen = (props) => {
         time: date
       });
       setNeedAdd(false);
+
     } else {
       editDream({
         id: id,
@@ -106,17 +107,31 @@ const DreamNoteScreen = (props) => {
   };
 
   const defaultCheck = () => {
+    console.log(!((header === DEFAULT_TITLE || header === '')
+      &&
+      text === ''
+      ||
+      needAdd
+    ))
+    console.log('header:', header === DEFAULT_TITLE || header === '');
+    console.log('text:', text === '');
+    console.log('need add:', needAdd);
+
     return !(
       (header === DEFAULT_TITLE || header === '')
       &&
-      text === ""
-      &&
-      needAdd
-    );
+      text === ''
+    ) &&
+      needAdd;
   };
 
   const saveCheck = () => {
     if (dream) {
+      console.log("saveCheck", !(
+        header === dream.title
+        &&
+        text === dream.note
+      ));
       return !(
         header === dream.title
         &&
@@ -166,6 +181,7 @@ const DreamNoteScreen = (props) => {
         <View style={styles.btnPanelLeft}>
           <Button
             onPress={() => {
+              console.log(saveCheck())
               if (saveCheck()) {
                 setBackProps();
                 visibleHandler();

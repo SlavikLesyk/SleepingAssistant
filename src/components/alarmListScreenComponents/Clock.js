@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-import { editAlarm } from '../actions'
-import { COLOR_MAIN } from '../Constants';
-import AppInput from './AppInput';
-import AppText from './AppText';
+import { editAlarm } from '../../actions'
+import { COLOR_MAIN } from '../../Constants';
+import AppInput from '../AppInput';
+import AppText from '../AppText';
 
 function Clock(props) {
   const { time, fontSize, id, editAlarm} = props;

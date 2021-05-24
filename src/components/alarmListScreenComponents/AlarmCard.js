@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
 import { connect } from 'react-redux';
-import Button from './Button';
+import Button from '../Button';
 import Clock from './Clock';
 import AlarmProps from './AlarmProps';
-import { openAlarmProps, toggleAlarm } from '../actions';
-import { windowHeight, BG_COLOR_COMPONENTS } from '../Constants';
+import { openAlarmProps, toggleAlarm } from '../../actions';
+import { windowHeight, BG_COLOR_COMPONENTS } from '../../Constants';
 
 const cardHeight = (windowHeight - 25) * .15;
 

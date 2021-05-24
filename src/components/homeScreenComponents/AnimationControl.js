@@ -1,39 +1,34 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import Animated, { 
-  useSharedValue,
+import Animated, {
   useAnimatedGestureHandler,
-  useAnimatedStyle,
   withDecay,
   cancelAnimation,
-  useDerivedValue,
-  runOnJS,
-  set
 } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
-import { windowHeight } from '../../Constants'; 
+import { windowHeight } from '../../Constants';
 
-export default function AnimationGesture ({ translateY, onChangeValue }) {  
+export default function AnimationGesture({ translateY, onChangeValue }) {
 
   const onGestureEvent = useAnimatedGestureHandler({
-    onStart: (_,ctx) => {      
+    onStart: (_, ctx) => {
       cancelAnimation(translateY);
       ctx.offsetY = translateY.value;
     },
-    onActive: (event,ctx) => {
+    onActive: (event, ctx) => {
       onChangeValue(event.translationY + ctx.offsetY);
     },
-    onEnd: (event, ctx) => {      
+    onEnd: (event, ctx) => {
       onChangeValue(withDecay({
-        velocity: event.velocityY        
+        velocity: event.velocityY
       }));
     }
-  }); 
+  });
 
   return (
     <View style={styles.container}>
       <PanGestureHandler onGestureEvent={onGestureEvent}>
-        <Animated.View style={styles.controlArea} /> 
+        <Animated.View style={styles.controlArea} />
       </PanGestureHandler>
     </View>
   );
@@ -43,7 +38,7 @@ const styles = StyleSheet.create({
   container: {
     height: windowHeight * .5,
   },
-  controlArea:{
+  controlArea: {
     height: windowHeight * .45,
   }
 });

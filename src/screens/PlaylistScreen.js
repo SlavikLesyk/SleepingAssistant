@@ -1,5 +1,5 @@
 import  React from 'react';
-import { View, StyleSheet, FlatList, TouchableHighlight, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { Player } from '@react-native-community/audio-toolkit';
 import GestureRecognizer from '../utility/swipe-gestures';
 import AppBackground from '../components/AppBackground';
@@ -12,31 +12,31 @@ const sounds = [
   {
     id: '1',
     path: 'sound1.mp3',
-    title: 'suck my dick',
+    title: 'Strange Kid',
     author: 'astral lizard',
   },
   {
     id: '2',
     path: 'sound2.mp3',
-    title: 'secret forest',
+    title: 'Crying Cat',
     author: 'astral snake',
   },
   {
     id: '3',
     path: 'sound3.mp3',
-    title: 'lsd lizard',
+    title: 'Drunk Man',
     author: 'funny lizard',
   },
   {
     id: '4',
     path: 'sound4.mp3',
-    title: 'fucking 2020',
+    title: 'Psyho Lizard',
     author: 'slow lizard',
   },
   {
     id: '5',
     path: 'sound5.mp3',
-    title: 'dreaming snake',
+    title: 'Immortal Killer',
     author: 'astral dog',
   }
 ];

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { BG_COLOR_COMPONENTS, COLOR_MAIN, windowHeight, windowWidth } from '../../Constants';
+import { BG_COLOR_COMPONENTS, COLOR_MAIN, windowHeight } from '../../Constants';
 import AppText from '../../components/AppText';
 import Animated, {
   useSharedValue,
@@ -8,37 +8,31 @@ import Animated, {
   interpolate
 } from 'react-native-reanimated';
 import { connect } from 'react-redux';
-import AnimatedText from './AnimatedText';
 
 const RADIUS = windowHeight * .4;
 
-const CirclePhase = ({ time }) => {
+const CirclePhase = ({ fallingSleepDeg }) => {
   const timeAnimation = useSharedValue(new Date().getHours() * 60 + new Date().getMinutes());
   const [hours, setHours] = useState(new Date().getHours());
   const [minutes, setMinutes] = useState(new Date().getMinutes());
-  const fallingSleepDeg = time;
 
   useEffect(() => {
     const timerID = setInterval(() => {
-      timeAnimation.value =( new Date().getHours() * 60 + new Date().getMinutes());
+      timeAnimation.value = (new Date().getHours() * 60 + new Date().getMinutes());
       setHours(new Date().getHours());
       setMinutes(new Date().getMinutes());
     }
-    ,200);
+      , 200);
     return () => clearInterval(timerID);
-  },[]);  
-  
+  }, []);
 
   const renderClock = () => {
-    
     const hoursStr = hours < 10 ? `0${hours}` : hours;
     const minutesStr = minutes < 10 ? `0${minutes}` : minutes;
-    const time = { value: `${hoursStr}:${minutesStr}`}
+
     return (
       <Animated.View style={[styles.text, rotateText]}>
-          <AppText style={{
-          margin: 15
-        }}>
+        <AppText style={styles.text}>
           {hoursStr}:{minutesStr}
         </AppText>
       </Animated.View>
@@ -72,7 +66,6 @@ const CirclePhase = ({ time }) => {
   });
 
   const rotateText = useAnimatedStyle(() => {
-    console.log(timeAnimation.value)
     const rotate = interpolate(
       timeAnimation.value,
       [0, 720],
@@ -92,25 +85,25 @@ const CirclePhase = ({ time }) => {
           <View style={[styles.innerCircle, styles.innerCircleSmall]}></View>
         </View>
         <View style={[styles.circleInnerWrap, styles.circle2]}>
-          <View style={styles.innerCircle}></View>
+          <View style={[styles.innerCircle, styles.firtPhase]}></View>
         </View>
         <View style={[styles.circleInnerWrap, styles.circle3]}>
-          <View style={styles.innerCircle}></View>
+          <View style={[styles.innerCircle, styles.secondPhase]}></View>
         </View>
         <View style={[styles.circleInnerWrap, styles.circle4]}>
-          <View style={styles.innerCircle}></View>
+          <View style={[styles.innerCircle, styles.thirdPhase]}></View>
         </View>
         <View style={[styles.circleInnerWrap, styles.circle5]}>
-          <View style={styles.innerCircle}></View>
+          <View style={[styles.innerCircle, styles.fourthPhase]}></View>
         </View>
         <View style={[styles.circleInnerWrap, styles.circle6]}>
           <View style={styles.innerCircle}></View>
         </View>
         <View style={[styles.circleInnerWrap, styles.circle7]}>
-          <View style={styles.innerCircle}></View>
+          <View style={[styles.innerCircle, styles.fourthPhase]}></View>
         </View>
         <View style={[styles.circleInnerWrap, styles.circle8]}>
-          <View style={styles.innerCircle}></View>
+          <View style={[styles.innerCircle, styles.thirdPhase]}></View>
         </View>
 
         <Animated.View style={[styles.clockCircle, rotateMarker]}>
@@ -133,7 +126,7 @@ const styles = StyleSheet.create({
   },
   marker: {
     height: 15,
-    width: 3,
+    width: 2,
     backgroundColor: COLOR_MAIN,
     position: 'absolute',
     top: 0,
@@ -141,7 +134,7 @@ const styles = StyleSheet.create({
   circle: {
     width: RADIUS,
     height: RADIUS,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: COLOR_MAIN,
     borderRadius: windowHeight * .2,
     justifyContent: 'center',
@@ -159,7 +152,7 @@ const styles = StyleSheet.create({
     width: windowHeight * .03,
     height: windowHeight * .03,
     borderColor: COLOR_MAIN,
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: windowHeight * .015,
     position: 'absolute',
     backgroundColor: BG_COLOR_COMPONENTS,
@@ -171,7 +164,30 @@ const styles = StyleSheet.create({
     height: windowHeight * .02,
     top: -windowHeight * .01,
     left: windowHeight * .19
-
+  },
+  firtPhase: {
+    width: windowHeight * .022,
+    height: windowHeight * .022,
+    top: -windowHeight * .011,
+    left: windowHeight * .189
+  },
+  secondPhase: {
+    width: windowHeight * .024,
+    height: windowHeight * .024,
+    top: -windowHeight * .012,
+    left: windowHeight * .188
+  },
+  thirdPhase: {
+    width: windowHeight * .026,
+    height: windowHeight * .026,
+    top: -windowHeight * .013,
+    left: windowHeight * .187
+  },
+  fourthPhase: {
+    width: windowHeight * .028,
+    height: windowHeight * .028,
+    top: -windowHeight * .014,
+    left: windowHeight * .186
   },
   circle1: {
     transform: [{ rotate: '0deg' }],
@@ -200,7 +216,7 @@ const styles = StyleSheet.create({
 
   clockMarker: {
     height: 15,
-    width: 3,
+    width: 2,
     backgroundColor: COLOR_MAIN,
     position: 'absolute',
     top: 0,
@@ -228,7 +244,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-    time: state.fallAsleepTime,
+    fallingSleepDeg: state.fallAsleepTime,
   };
 }
 

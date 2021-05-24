@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, TextInput } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-import Button from './Button';
-import AppText from './AppText';
-import AppInput from './AppInput';
-import { deleteAlarm } from '../actions';
+import Button from '../Button';
+import AppText from '../AppText';
+import AppInput from '../AppInput';
+import { deleteAlarm } from '../../actions';
 import DaysCicle from './DaysCicle';
-import { BG_COLOR_COMPONENTS, COLOR_SECONDARY, windowHeight } from '../Constants';
+import { BG_COLOR_COMPONENTS, COLOR_SECONDARY, windowHeight } from '../../Constants';
 
 const cardHeight = windowHeight * .22;
 
@@ -14,7 +14,7 @@ const AlarmProps = (props) => {
   const [text, setText] = useState('');
 
   const deleteAlarm = () => {
-    this.props.deleteAlarm(this.props.id)
+    props.deleteAlarm(props.id)
   }
 
   return (
@@ -25,8 +25,8 @@ const AlarmProps = (props) => {
           <AppText styles={{ fontSize: cardHeight * .2 }}>cycle</AppText>
         </View>
         <View style={{ flex: 1 }}>
-          <Button style={styles.btnDelete} onPress={this.deleteAlarm}>
-            {/* <MaterialCommunityIcons name="bell-remove-outline" size={28} color="tomato" /> */}
+          <Button style={styles.btnDelete} onPress={deleteAlarm}>
+            delete
           </Button>
         </View>
       </View>
@@ -34,7 +34,12 @@ const AlarmProps = (props) => {
         <DaysCicle activeDays={props.days} id={props.id} />
       </View>
       <View style={styles.title}>
-        <AppInput placeholder="name" placeholderTextColor={COLOR_SECONDARY} value={text} onChangeText={value => setText(value)} />
+        <AppInput
+          placeholder="name"
+          placeholderTextColor={COLOR_SECONDARY}
+          value={text} onChangeText={value => setText(value)}
+          style={styles.input}
+        />
       </View>
       <View style={styles.recSleepTime}>
 
@@ -50,7 +55,8 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   heading: {
     flex: 2,
@@ -64,12 +70,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   title: {
-    flex: 1,
-    justifyContent: 'center',
+    flex: 2,
+  },
+  input: {
+    textAlign: 'center',
+    fontSize: 16
   },
   btnDelete: {
     color: 'tomato',
-    fontSize: 28,
+    fontSize: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },

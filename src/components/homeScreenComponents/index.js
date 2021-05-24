@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { COLOR_MAIN, windowHeight } from '../../Constants';
 import AnimationControl from './AnimationControl';
 import AnimatedSpinner from './AnimatedSpinner';
-import AnimatedText from './AnimatedText';
+import AnimatedText from '../../utility/AnimatedText';
 import Button from '../Button';
 import CirclePhase from './CirclePhase';
 import AppText from '../AppText';
@@ -21,7 +21,7 @@ const ONE_STEP_VALUE = 80;
 const MINUTES = 60;
 const HOURS = 24;
 
-function AnimationMainNode({ fallAsleepTime, navigation, addAlarm }) {
+function HomeComponents({ fallAsleepTime, navigation, addAlarm }) {
   const minutesAnimation = useSharedValue(0);
   const hoursAnimation = useSharedValue(-7 * ONE_STEP_VALUE);
 
@@ -194,7 +194,7 @@ function AnimationMainNode({ fallAsleepTime, navigation, addAlarm }) {
       </View>
       <View style={styles.recomendSection}>
         <AppText>
-          going to bad trip calculator
+          going bad time
         </AppText>
         <View style={styles.recomendTime} >
           <AnimatedText text={recomendText4Phase} />
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
   },
   marker: {
     height: 15,
-    width: 3,
+    width: 2,
     backgroundColor: COLOR_MAIN,
     position: 'absolute',
     top: 0,
@@ -266,12 +266,15 @@ const styles = StyleSheet.create({
   recomendSection: {
     flex: 2,
     alignItems: 'center',
-    justifyContent: 'space-around'
+    justifyContent: 'flex-start',
+    paddingTop: 30
   },
   recomendTime: {
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    paddingTop: 20
+
   }
 });
 
@@ -281,5 +284,5 @@ const mapStateToProps = (state) => {
   };
 }
 
-export default connect(mapStateToProps, { addAlarm })(AnimationMainNode);
+export default connect(mapStateToProps, { addAlarm })(HomeComponents);
 
