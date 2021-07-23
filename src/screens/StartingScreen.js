@@ -8,7 +8,6 @@ export default function StartingScreen({ navigation }) {
   return (
     <GestureRecognizer
       onSwipeLeft={() => navigation.navigate('Home')}
-      // onSwipeRight={() => navigation.navigate('Start')}
       style={{ flex: 1 }}
     >
       <AppBackground>

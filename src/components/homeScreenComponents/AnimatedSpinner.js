@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
   },
   textSecondary: {
     fontSize: windowHeight * .04,
-    position: 'absolute'
+    position: 'absolute',
+    opacity: .5
   },
   textTop: {
     top: - windowHeight * .04

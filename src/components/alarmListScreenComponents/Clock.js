@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { connect } from 'react-redux';
-import { editAlarm } from '../../actions'
-import { COLOR_MAIN } from '../../Constants';
+import React, {useState} from 'react';
+import {View, StyleSheet} from 'react-native';
+import {connect} from 'react-redux';
+import {editAlarm} from '../../actions';
+import {COLOR_MAIN} from '../../Constants';
 import AppInput from '../AppInput';
 import AppText from '../AppText';
 
 function Clock(props) {
-  const { time, fontSize, id, editAlarm} = props;
+  const {time, fontSize, id, editAlarm} = props;
   const [hours, setHours] = useState(time.split(':')[0]);
   const [minutes, setMinutes] = useState(time.split(':')[1]);
   const [oldHours, setOldHours] = useState('');
@@ -43,9 +43,9 @@ function Clock(props) {
     if (type === 'minutes') {
       setMinutes(newValue);
     }
-  }
+  };
 
-  const setTimeOnBlur = (type) => {
+  const setTimeOnBlur = type => {
     let minutesValue = minutes;
     let hoursValue = hours;
 
@@ -73,8 +73,8 @@ function Clock(props) {
       default:
         console.error('setTimeOnBlur type error');
     }
-    editAlarm(id, `${hours}:${minutes}`)
-  }
+    editAlarm(id, `${hours}:${minutes}`);
+  };
 
   return (
     <View style={styles.container}>
@@ -89,25 +89,25 @@ function Clock(props) {
           setTimeOnBlur('hours');
           // this.props.onBlur ? this.props.onBlur('hours', this.state.hours) : null
         }}
-        keyboardType='number-pad'
-        maxLengt={2}
-        style={[styles.clock, { textAlign: 'right', fontSize: fontSize }]}
+        keyboardType="number-pad"
+        maxLength={2}
+        style={[styles.clock, {textAlign: 'right', fontSize: fontSize}]}
       />
-      <AppText style={{ fontSize: fontSize }}>:</AppText>
+      <AppText style={{fontSize: fontSize}}>:</AppText>
       <AppInput
         value={minutes}
         onFocus={() => {
           setOldMinutes(minutes);
-          setMinutes('')
+          setMinutes('');
         }}
         onChangeText={value => setTimeOnChange(value, 'minutes')}
         onBlur={() => {
-          setTimeOnBlur('minutes')
+          setTimeOnBlur('minutes');
           // this.props.onBlur ? this.props.onBlur('minutes', this.state.minutes) : null
         }}
-        keyboardType='number-pad'
-        maxLengt={2}
-        style={[styles.clock, { textAlign: 'left', fontSize: fontSize }]}
+        keyboardType="number-pad"
+        maxLength={2}
+        style={[styles.clock, {textAlign: 'left', fontSize: fontSize}]}
       />
     </View>
   );
@@ -118,14 +118,13 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   clock: {
     flex: 0,
     color: COLOR_MAIN,
-    padding: 5
-  }
-
+    padding: 5,
+  },
 });
 
-export default connect(null, { editAlarm })(Clock);
+export default connect(null, {editAlarm})(Clock);

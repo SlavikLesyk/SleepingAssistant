@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { BG_COLOR_COMPONENTS, COLOR_MAIN, windowHeight } from '../../Constants';
+import { BG_COLOR_CIRCLES, COLOR_MAIN, windowHeight } from '../../Constants';
 import AppText from '../../components/AppText';
 import Animated, {
   useSharedValue,
@@ -100,11 +100,11 @@ const CirclePhase = ({ fallingSleepDeg }) => {
           <View style={styles.innerCircle}></View>
         </View>
         <View style={[styles.circleInnerWrap, styles.circle7]}>
-          <View style={[styles.innerCircle, styles.fourthPhase]}></View>
+          <View style={[styles.innerCircle, styles.sixthPhase]}></View>
         </View>
-        <View style={[styles.circleInnerWrap, styles.circle8]}>
-          <View style={[styles.innerCircle, styles.thirdPhase]}></View>
-        </View>
+        {/* <View style={[styles.circleInnerWrap, styles.circle8]}>
+          <View style={[styles.innerCircle, styles.seventhPhase]}></View>
+        </View> */}
 
         <Animated.View style={[styles.clockCircle, rotateMarker]}>
           <View style={styles.clockMarker} />
@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   circle: {
+    opacity: .8,
     width: RADIUS,
     height: RADIUS,
     borderWidth: 1,
@@ -149,45 +150,57 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   innerCircle: {
-    width: windowHeight * .03,
-    height: windowHeight * .03,
-    borderColor: COLOR_MAIN,
-    borderWidth: 1,
-    borderRadius: windowHeight * .015,
-    position: 'absolute',
-    backgroundColor: BG_COLOR_COMPONENTS,
-    left: windowHeight * .185 + 1,
-    top: -windowHeight * .015
-  },
-  innerCircleSmall: {
     width: windowHeight * .02,
     height: windowHeight * .02,
-    top: -windowHeight * .01,
-    left: windowHeight * .19
+    borderColor: COLOR_MAIN,
+    borderWidth: 1,
+    borderRadius: windowHeight * .01,
+    position: 'absolute',
+    backgroundColor: BG_COLOR_CIRCLES,
+    left: windowHeight * .19,
+    top: -windowHeight * .01, 
+  },
+  innerCircleSmall: {
+    width: windowHeight * .01,
+    height: windowHeight * .01,
+    top: -windowHeight * .005,
+    left: windowHeight * .195
   },
   firtPhase: {
-    width: windowHeight * .022,
-    height: windowHeight * .022,
-    top: -windowHeight * .011,
-    left: windowHeight * .189
+    width: windowHeight * .012,
+    height: windowHeight * .012,
+    top: -windowHeight * .006,
+    left: windowHeight * .194 
   },
   secondPhase: {
-    width: windowHeight * .024,
-    height: windowHeight * .024,
-    top: -windowHeight * .012,
-    left: windowHeight * .188
+    width: windowHeight * .014,
+    height: windowHeight * .014,
+    top: -windowHeight * .007,
+    left: windowHeight * .193
   },
   thirdPhase: {
-    width: windowHeight * .026,
-    height: windowHeight * .026,
-    top: -windowHeight * .013,
-    left: windowHeight * .187
+    width: windowHeight * .016,
+    height: windowHeight * .016,
+    top: -windowHeight * .008,
+    left: windowHeight * .192
   },
   fourthPhase: {
-    width: windowHeight * .028,
-    height: windowHeight * .028,
-    top: -windowHeight * .014,
-    left: windowHeight * .186
+    width: windowHeight * .018,
+    height: windowHeight * .018,
+    top: -windowHeight * .009,
+    left: windowHeight * .191
+  },
+  sixthPhase: {
+    width: windowHeight * .016,
+    height: windowHeight * .016,
+    top: -windowHeight * .008,
+    left: windowHeight * .191
+  },
+  seventhPhase: {
+    width: windowHeight * .014,
+    height: windowHeight * .014,
+    top: -windowHeight * .007,
+    left: windowHeight * .191
   },
   circle1: {
     transform: [{ rotate: '0deg' }],

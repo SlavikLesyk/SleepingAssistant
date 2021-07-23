@@ -5,7 +5,7 @@ import Animated, {
   interpolate,
   Extrapolate,
 } from 'react-native-reanimated';
-import { BG_COLOR_COMPONENTS, COLOR_MAIN } from '../../Constants';
+import { BG_COLOR_CIRCLES, COLOR_MAIN, windowHeight } from '../../Constants';
 
 export default function SleepingCircle({ rotateAnimation }) {
   const rotateStyle = useAnimatedStyle(() => {
@@ -60,20 +60,20 @@ const styles = StyleSheet.create({
     }]
   },
   dote: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: windowHeight * .02,
+    height: windowHeight * .02,
+    borderRadius: 8,
     borderWidth: 2,
     borderColor: COLOR_MAIN,
-    backgroundColor: BG_COLOR_COMPONENTS,
+    backgroundColor: BG_COLOR_CIRCLES,
     position: 'absolute',
-    top: -12,
+    top: -8,
   },
   marker: {
     width: 3,
     height: 25,
     backgroundColor: COLOR_MAIN,
     position: "absolute",
-    top: 15,
+    top: 30,
   }
 });

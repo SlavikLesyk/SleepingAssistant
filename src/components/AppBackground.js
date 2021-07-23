@@ -1,18 +1,21 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView, ImageBackground, Image } from 'react-native';
 import { BG_FIRST_COLOR, BG_SECOND_COLOR } from '../Constants';
 import LinearGradient from 'react-native-linear-gradient';
 
 const AppBackground = ({ children }) => {
+  console.log(require('../assets/img/background.png'))
   return (
     <SafeAreaView style={styles.container}>
       <LinearGradient
-        start={{ x: 0, y: 1 }}
-        end={{ x: 1, y: 0 }}
+        start={{ x: 1, y: 0 }}
+        end={{ x: 0, y: 1 }}
         colors={[BG_FIRST_COLOR, BG_SECOND_COLOR]}
         style={styles.linearGradient}
-      >
+      >        
+              <ImageBackground source={require('../assets/img/background.png')} style={styles.bg}/>
         {children}
+
       </LinearGradient>
     </SafeAreaView>
   );
@@ -24,8 +27,23 @@ const styles = StyleSheet.create({
     backgroundColor: BG_FIRST_COLOR
   },
   linearGradient: {
-    flex: 1
+    flex: 1,
+
+  },
+  bg:{
+    flex: 1,
+    position: 'absolute',
+    resizeMode: 'contain',
+    opacity: .2,    
+    transform: [{
+      scale: 1.2
+    }],
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
   }
+
 });
 
 export default AppBackground;
