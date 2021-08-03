@@ -1,30 +1,41 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { connect } from 'react-redux';
-import {
-  useSharedValue,
-  useDerivedValue,
-} from 'react-native-reanimated';
+import React, {useEffect} from 'react';
+import {View, StyleSheet} from 'react-native';
+import {useSharedValue, useDerivedValue} from 'react-native-reanimated';
+import {useAsyncStorage} from '@react-native-async-storage/async-storage';
 import Button from '../../components/Button';
 import AppText from '../../components/AppText';
 import SleepingCircle from './SleepingCircle';
 import AnimationControl from './AnimationControl';
-import { changeFallAsleepTime } from '../../actions';
-import { windowHeight } from '../../Constants';
+import {windowHeight} from '../../Constants';
 import AnimatedText from '../../utility/AnimatedText';
 
-function StartingComponents({ changeFallAsleepTime, fallAsleepTime, navigation }) {
-  const fallingAsleepAnimation = useSharedValue(fallAsleepTime * 5 - 162);
+function StartingComponents({navigation}) {
+  const {getItem, setItem} = useAsyncStorage('fallAsleepTime');
+  const fallingAsleepAnimation = useSharedValue(-62);
 
-  const onChangeTime = (value) => {
+  const onChangeTime = value => {
     'worklet';
     fallingAsleepAnimation.value = value;
   };
 
+  const readItemFromStorage = async () => {
+    const item = await getItem();
+    if (item !== null) {
+      onChangeTime(item * 5 - 162);
+    }
+  };
+
+  const writeItemToStorage = async newValue => {
+    await setItem(newValue);
+  };
+
+  useEffect(() => {
+    readItemFromStorage();
+  }, []);
+
   const minutesText = useDerivedValue(() => {
     return String(Math.ceil((fallingAsleepAnimation.value + 137) / 5 + 5));
   });
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -47,12 +58,10 @@ function StartingComponents({ changeFallAsleepTime, fallAsleepTime, navigation }
       <View style={styles.buttonSection}>
         <Button
           onPress={() => {
+            writeItemToStorage(minutesText.value);
             navigation.navigate('Home');
-            changeFallAsleepTime(Number(minutesText.value))
-          }
-          }
-          style={styles.button}
-        >
+          }}
+          style={styles.button}>
           confirm
         </Button>
       </View>
@@ -63,8 +72,8 @@ function StartingComponents({ changeFallAsleepTime, fallAsleepTime, navigation }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: windowHeight * .2,
-    alignItems: 'center'
+    paddingTop: windowHeight * 0.2,
+    alignItems: 'center',
   },
   header: {
     flex: 1,
@@ -85,15 +94,11 @@ const styles = StyleSheet.create({
     flex: 3,
   },
   control: {
-    top: windowHeight * -.04,
+    top: windowHeight * -0.04,
   },
   heading: {
-    fontSize: 22.2
-  }
+    fontSize: 22.2,
+  },
 });
 
-const mapStateToProps = (state) => {
-  return { fallAsleepTime: state.fallAsleepTime };
-}
-
-export default connect(mapStateToProps, { changeFallAsleepTime })(StartingComponents)
+export default StartingComponents;

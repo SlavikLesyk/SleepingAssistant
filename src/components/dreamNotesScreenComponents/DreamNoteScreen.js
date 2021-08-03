@@ -1,51 +1,44 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
-import { connect } from 'react-redux';
-import Button from '../components/Button';
-import AppInput from '../components/AppInput';
-import AppBackground from '../components/AppBackground';
-import ModalAsk from '../components/ModalAsk';
-import AppText from '../components/AppText';
-import { BG_COLOR_COMPONENTS, windowHeight, windowWidth } from '../Constants';
-import { addNewDream, editDream, deleteDream } from '../actions';
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet, ScrollView} from 'react-native';
+import AppBackground from '../AppBackground';
+import ModalAsk from '../ModalAsk';
+import Button from '../Button';
+import AppInput from '../AppInput';
+import AppText from '../AppText';
+import {BG_COLOR_COMPONENTS, windowHeight, windowWidth} from '../../Constants';
+import {
+  addNewDreamNote,
+  editDreamNote,
+  deleteDreamNote,
+} from './dreamNotesHandler';
+import {
+  addNewData,
+  editData,
+  deleteData,
+} from '../../utility/asyncStorageHandler';
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    dreams: state.dreams,
-    dream: state.dreams.find((dream) => dream.id === ownProps.route.params.id)
-  };
-};
-
-const DreamNoteScreen = (props) => {
-  const {
-    navigation,
-    route,
-    dreams,
-    dream,
-    deleteDream,
-    editDream,
-    addNewDream
-  } = props;
-  const { isNewDream } = route.params;
+const DreamNoteScreen = ({navigation, route}) => {
+  const {isNewDream, id, dream} = route.params;
 
   const date = isNewDream ? new Date().toLocaleDateString() : dream.time;
   const DEFAULT_TITLE = 'Fuck the World!';
 
-  const [header, setHeader] = useState(isNewDream ? DEFAULT_TITLE : dream.title);
-  const [text, setText] = useState(dream ? dream.note : "");
-  const [editMode, seteditMode] = useState(isNewDream);
+  const [header, setHeader] = useState(
+    isNewDream ? DEFAULT_TITLE : dream.title,
+  );
+  const [text, setText] = useState(dream ? dream.note : '');
+  const [editMode, setEditMode] = useState(isNewDream);
   const [newDream, setNewDream] = useState(isNewDream);
   const [needAdd, setNeedAdd] = useState(isNewDream);
-  const [id, setId] = useState(dream ? dream.id : dreams.length ? dreams[dreams.length - 1].id + 1 : 1);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalProps, setModalProps] = useState({});
 
   const visibleHandler = () => setModalVisible(!modalVisible);
 
-  const editModeToggle = () => seteditMode(!editMode);
+  const editModeToggle = () => setEditMode(!editMode);
 
   const onDeleteYes = () => {
-    deleteDream(id);
+    deleteData('dreamNotes', id);
     onPressBack();
   };
 
@@ -68,23 +61,21 @@ const DreamNoteScreen = (props) => {
   onPressSave = () => {
     editModeToggle();
     if (needAdd) {
-      addNewDream({
+      addNewData('dreamNotes', {
         id: id,
         title: header,
         note: text,
-        time: date
+        time: date,
       });
       setNeedAdd(false);
-
     } else {
-      editDream({
+      editData('dreamNotes', {
         id: id,
         title: header,
         note: text,
-        time: date
+        time: date,
       });
     }
-
   };
 
   onPressBack = () => {
@@ -102,41 +93,33 @@ const DreamNoteScreen = (props) => {
     setModalProps({
       title: `Would you like to save changes?`,
       yesFunc: onBackYes,
-      noFunc: onBackNo
-    })
+      noFunc: onBackNo,
+    });
   };
 
   const defaultCheck = () => {
-    console.log(!((header === DEFAULT_TITLE || header === '')
-      &&
-      text === ''
-      ||
-      needAdd
-    ))
-    console.log('header:', header === DEFAULT_TITLE || header === '');
-    console.log('text:', text === '');
-    console.log('need add:', needAdd);
+    // console.log(
+    //   !(
+    //     ((header === DEFAULT_TITLE || header === '') && text === '') ||
+    //     needAdd
+    //   ),
+    // );
+    // console.log('header:', header === DEFAULT_TITLE || header === '');
+    // console.log('text:', text === '');
+    // console.log('need add:', needAdd);
 
-    return !(
-      (header === DEFAULT_TITLE || header === '')
-      &&
-      text === ''
-    ) &&
-      needAdd;
+    return (
+      !((header === DEFAULT_TITLE || header === '') && text === '') && needAdd
+    );
   };
 
   const saveCheck = () => {
     if (dream) {
-      console.log("saveCheck", !(
-        header === dream.title
-        &&
-        text === dream.note
-      ));
-      return !(
-        header === dream.title
-        &&
-        text === dream.note
-      );
+      // console.log(
+      //   'saveCheck',
+      //   !(header === dream.title && text === dream.note),
+      // );
+      return !(header === dream.title && text === dream.note);
     }
     return defaultCheck();
   };
@@ -153,7 +136,7 @@ const DreamNoteScreen = (props) => {
       );
     }
 
-    return <AppText style={styles.headerText}>{header}</AppText>
+    return <AppText style={styles.headerText}>{header}</AppText>;
   };
 
   const renderDreamText = () => {
@@ -162,17 +145,19 @@ const DreamNoteScreen = (props) => {
         <AppInput
           value={text}
           onChangeText={value => setText(value)}
-          style={[styles.dreamText, { minHeight: windowHeight * .26, backgroundColor: BG_COLOR_COMPONENTS }]}
+          style={[
+            styles.dreamText,
+            {
+              minHeight: windowHeight * 0.26,
+              backgroundColor: BG_COLOR_COMPONENTS,
+            },
+          ]}
           autoFocus={isNewDream}
           multiline={true}
         />
       );
     }
-    return (
-      <AppText style={styles.dreamText}>
-        {text}
-      </AppText>
-    );
+    return <AppText style={styles.dreamText}>{text}</AppText>;
   };
 
   const renderBtnPanel = () => {
@@ -181,28 +166,33 @@ const DreamNoteScreen = (props) => {
         <View style={styles.btnPanelLeft}>
           <Button
             onPress={() => {
-              console.log(saveCheck())
+              // console.log(saveCheck());
               if (saveCheck()) {
                 setBackProps();
                 visibleHandler();
               } else {
                 onPressBack();
               }
-            }}>back</Button>
+            }}>
+            back
+          </Button>
         </View>
         <View style={styles.btnPanelRight}>
-          {(editMode)
-            ? <Button onPress={onPressSave}>save</Button>
-            : <Button onPress={editModeToggle}>edit</Button>
-          }
+          {editMode ? (
+            <Button onPress={onPressSave}>save</Button>
+          ) : (
+            <Button onPress={editModeToggle}>edit</Button>
+          )}
           <Button
-            style={{ opacity: defaultCheck() ? 1 : .4 }}
+            style={{opacity: defaultCheck() ? 1 : 0.4}}
             onPress={() => {
               if (defaultCheck()) {
                 setDelProps();
                 visibleHandler();
               }
-            }}>delete</Button>
+            }}>
+            delete
+          </Button>
         </View>
       </View>
     );
@@ -218,16 +208,16 @@ const DreamNoteScreen = (props) => {
         />
         {editMode ? renderBtnPanel() : null}
         <ScrollView style={styles.contentScroll}>
-          <View style={{ marginTop: editMode ? 0 : 25 }}>
+          <View style={{marginTop: editMode ? 0 : 25}}>
             <View style={styles.headerWrap}>
-              <View style={styles.header}>
-                {renderHeader()}
-              </View>
+              <View style={styles.header}>{renderHeader()}</View>
             </View>
             <View style={styles.dreamSection}>
               <View style={styles.dreamPanel}>
                 {renderDreamText()}
-                {editMode ? null : <AppText style={styles.datesText}>{date}</AppText>}
+                {editMode ? null : (
+                  <AppText style={styles.datesText}>{date}</AppText>
+                )}
               </View>
             </View>
           </View>
@@ -246,25 +236,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: windowHeight * .1,
+    height: windowHeight * 0.1,
     width: windowWidth,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   btnPanelRight: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
-  content: {
-
-  },
+  content: {},
   headerWrap: {
-    backgroundColor: BG_COLOR_COMPONENTS
+    backgroundColor: BG_COLOR_COMPONENTS,
   },
   header: {
     alignSelf: 'center',
     justifyContent: 'center',
-    height: windowHeight * .07,
-    width: windowWidth * .8,
-    marginBottom: 15
+    height: windowHeight * 0.07,
+    width: windowWidth * 0.8,
+    marginBottom: 15,
   },
   headerText: {
     alignSelf: 'center',
@@ -273,23 +261,24 @@ const styles = StyleSheet.create({
   dreamSection: {
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    padding: windowWidth * .03,
+    padding: windowWidth * 0.03,
     paddingBottom: 0,
   },
   dreamText: {
     textAlign: 'left',
     textAlignVertical: 'top',
-    marginBottom: windowHeight * .08,
-    width: windowWidth * .94,
+    marginBottom: windowHeight * 0.08,
+    width: windowWidth * 0.94,
   },
   datesText: {
     alignSelf: 'flex-end',
-    paddingBottom: windowHeight * .25,
+    paddingBottom: windowHeight * 0.25,
   },
 });
 
-export default connect(mapStateToProps, {
-  addNewDream,
-  editDream,
-  deleteDream
-})(DreamNoteScreen);
+export default DreamNoteScreen;
+// connect(mapStateToProps, {
+//   addNewDream,
+//   editDream,
+//   deleteDream
+// })();

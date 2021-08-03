@@ -1,80 +1,107 @@
-import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { connect } from 'react-redux';
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet} from 'react-native';
+import {connect} from 'react-redux';
 import Button from '../Button';
 import AppText from '../AppText';
 import AppInput from '../AppInput';
-import { deleteAlarm } from '../../actions';
-import DaysCicle from './DaysCicle';
-import { BG_COLOR_COMPONENTS, COLOR_SECONDARY, windowHeight } from '../../Constants';
+import {deleteData, editData, getData} from '../../utility/asyncStorageHandler';
+// import DaysCicle from './DaysCicle';
+import {
+  BG_COLOR_COMPONENTS,
+  COLOR_SECONDARY,
+  windowHeight,
+} from '../../Constants';
 
-const cardHeight = windowHeight * .22;
+const cardHeight = windowHeight * 0.22;
 
-const AlarmProps = (props) => {
+const AlarmProps = ({id, deleteAlarm}) => {
   const [text, setText] = useState('');
+  const [alarmData, setAlarmData] = useState({});
 
-  const deleteAlarm = () => {
-    props.deleteAlarm(props.id)
-  }
+  const getAlarmData = async () => {
+    const alarmList = await getData('alarmList');
+    const alarmData = alarmList.filter(item => item.id === id)[0];
+    setAlarmData(alarmData);
+    setText(alarmData.name)
+  };
+
+  useEffect(() => {
+    getAlarmData();
+  }, []);
+
+  const onPressDelete = () => {
+    deleteData('alarmList', id);
+    deleteAlarm();
+  };
+
+  const saveName = async () => {
+    await editData('alarmList', {id: id, name: text});
+    setAlarmData({...alarmData, name: text});
+  };
+
+  const toggleRepeat = async () => {
+    await editData('alarmList', {id: id, repeat: !alarmData.repeat});
+    setAlarmData({...alarmData, repeat: !alarmData.repeat});
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={{ flex: 1 }} />
-        <View style={styles.heading}>
-          <AppText styles={{ fontSize: cardHeight * .2 }}>cycle</AppText>
-        </View>
-        <View style={{ flex: 1 }}>
-          <Button style={styles.btnDelete} onPress={deleteAlarm}>
+        <View style={{flex: 1}} />
+        <View style={{flex: 1}}>
+          <Button style={styles.btnDelete} onPress={onPressDelete}>
             delete
           </Button>
         </View>
       </View>
       <View style={styles.days}>
-        <DaysCicle activeDays={props.days} id={props.id} />
+        {/* <DaysCicle activeDays={props.days} id={props.id} /> */}
+        <Button
+          style={{opacity: alarmData.repeat ? 1 : 0.2}}
+          onPress={toggleRepeat}>
+          repeat
+        </Button>
       </View>
       <View style={styles.title}>
         <AppInput
-          placeholder="name"
-          placeholderTextColor={COLOR_SECONDARY}
-          value={text} onChangeText={value => setText(value)}
+          value={text}
+          onChangeText={value => setText(value)}
           style={styles.input}
+          onBlur={saveName}
         />
       </View>
-      <View style={styles.recSleepTime}>
-
-      </View>
+      <View style={styles.recSleepTime}></View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     height: cardHeight,
-    backgroundColor: BG_COLOR_COMPONENTS
+    backgroundColor: BG_COLOR_COMPONENTS,
   },
   header: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   heading: {
     flex: 2,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   days: {
     flex: 2,
     flexDirection: 'row',
     paddingHorizontal: 20,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   title: {
     flex: 2,
   },
   input: {
     textAlign: 'center',
-    fontSize: 16
+    fontSize: 16,
   },
   btnDelete: {
     color: 'tomato',
@@ -84,12 +111,8 @@ const styles = StyleSheet.create({
   },
   recSleepTime: {
     flex: 1,
-    flexDirection: 'row'
-  }
+    flexDirection: 'row',
+  },
 });
 
-
-export default connect(
-  null,
-  { deleteAlarm }
-)(AlarmProps);
+export default AlarmProps;

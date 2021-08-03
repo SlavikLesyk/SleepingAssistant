@@ -2,14 +2,14 @@ import  React  from 'react';
 import { Text, StyleSheet } from 'react-native';
 import AppBackground from '../components/AppBackground';
 
-const PersonalisationScreen = () => {
+const PersonalizationScreen = () => {
   return (
     <AppBackground>
-      <Text>PersonalisationScreen</Text>
+      <Text>PersonalizationScreen</Text>
     </AppBackground> 
   );
 };
 
 const styles = StyleSheet.create({});
 
-export default PersonalisationScreen;
+export default PersonalizationScreen;

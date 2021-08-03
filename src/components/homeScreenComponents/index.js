@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
 import Animated, {
   useSharedValue,
@@ -7,7 +7,7 @@ import Animated, {
   cancelAnimation,
   interpolate,
 } from 'react-native-reanimated';
-import {connect} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {BG_COLOR_COMPONENTS, COLOR_MAIN, windowHeight} from '../../Constants';
 import AnimationControl from './AnimationControl';
 import AnimatedSpinner from './AnimatedSpinner';
@@ -15,15 +15,41 @@ import AnimatedText from '../../utility/AnimatedText';
 import Button from '../Button';
 import CirclePhase from './CirclePhase';
 import AppText from '../AppText';
-import {addAlarm} from '../../actions';
 
 const ONE_STEP_VALUE = 80;
 const MINUTES = 60;
 const HOURS = 24;
 
-function HomeComponents({fallAsleepTime, navigation, addAlarm}) {
+function HomeComponents({navigation}) {
+  const [fallAsleepTime, setFallAsleepTime] = useState(null);
   const minutesAnimation = useSharedValue(0);
   const hoursAnimation = useSharedValue(-7 * ONE_STEP_VALUE);
+
+  const getFallAsleepTime = async () => {
+    try {
+      const value = await AsyncStorage.getItem('fallAsleepTime');
+      if (value !== null) {
+        setFallAsleepTime(Number(value));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  console.log(fallAsleepTime);
+  useEffect(() => {
+    getFallAsleepTime();
+    console.log(fallAsleepTime);
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getFallAsleepTime();
+      console.log('focused');
+      console.log(fallAsleepTime);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const onChangeMinutes = value => {
     'worklet';
@@ -131,7 +157,8 @@ function HomeComponents({fallAsleepTime, navigation, addAlarm}) {
     return stepH * 60 + stepM;
   });
 
-  const recomendText5Phase = useDerivedValue(() => {
+  const recommendText5Phase = useDerivedValue(() => {
+    console.log(fallAsleepTime);
     let lapM = Math.ceil(
       (minutesAnimation.value + (fallAsleepTime + 30) * ONE_STEP_VALUE) /
         (ONE_STEP_VALUE * MINUTES),
@@ -156,7 +183,7 @@ function HomeComponents({fallAsleepTime, navigation, addAlarm}) {
     }`;
   });
 
-  const recomendText6Phase = useDerivedValue(() => {
+  const recommendText6Phase = useDerivedValue(() => {
     let lapM = Math.ceil(
       (minutesAnimation.value + fallAsleepTime * ONE_STEP_VALUE) /
         (ONE_STEP_VALUE * MINUTES),
@@ -181,7 +208,7 @@ function HomeComponents({fallAsleepTime, navigation, addAlarm}) {
     }`;
   });
 
-  const recomendText4Phase = useDerivedValue(() => {
+  const recommendText4Phase = useDerivedValue(() => {
     let lapM = Math.ceil(
       (minutesAnimation.value + fallAsleepTime * ONE_STEP_VALUE) /
         (ONE_STEP_VALUE * MINUTES),
@@ -217,8 +244,28 @@ function HomeComponents({fallAsleepTime, navigation, addAlarm}) {
     };
   });
 
-  const onPressAddAlarm = () => {
-    addAlarm(`${hoursText.value}:${minutesText.value}`);
+  const onPressAddAlarm = async () => {
+    try {
+      const jsonList = await AsyncStorage.getItem('alarmList');
+      const list = jsonList ? JSON.parse(jsonList) : [];
+      const id = list[0] ? list[list.length - 1].id + 1 : 1;
+      const newList = JSON.stringify([
+        ...list,
+        {
+          id: id,
+          time: `${hoursText.value}:${minutesText.value}`,
+          isOn: true,
+          name: 'name',
+          repeat: false,
+          recommend4Phase: recommendText4Phase.value,
+          recommend5Phase: recommendText5Phase.value,
+          recommend6Phase: recommendText6Phase.value,
+        },
+      ]);
+      await AsyncStorage.setItem('alarmList', newList);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -255,23 +302,23 @@ function HomeComponents({fallAsleepTime, navigation, addAlarm}) {
         <Animated.View style={[styles.outerCircle, rotateMarker]}>
           <View style={styles.marker} />
         </Animated.View>
-        <CirclePhase />
+        <CirclePhase fallAsleepTime={fallAsleepTime} />
       </View>
-      <View style={styles.recomendSection}>
+      <View style={styles.recommendSection}>
         <AppText>going bad time</AppText>
-        <View style={styles.recomendTime}>
-          <AnimatedText text={recomendText4Phase} />
-          <AnimatedText text={recomendText5Phase} />
-          <AnimatedText text={recomendText6Phase} />
+        <View style={styles.recommendTime}>
+          <AnimatedText text={recommendText4Phase} />
+          <AnimatedText text={recommendText5Phase} />
+          <AnimatedText text={recommendText6Phase} />
         </View>
       </View>
       <View style={styles.buttonSection}>
         <Button
-          onPress={() => {
+          onPress={async () => {
             cancelAnimation(hoursAnimation);
             cancelAnimation(minutesAnimation);
+            await onPressAddAlarm();
             navigation.navigate('Alarm');
-            onPressAddAlarm();
           }}>
           add alarm
         </Button>
@@ -329,14 +376,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
   },
-  recomendSection: {
+  recommendSection: {
     flex: 2,
     alignItems: 'center',
     justifyContent: 'flex-start',
     paddingTop: 30,
     backgroundColor: BG_COLOR_COMPONENTS,
   },
-  recomendTime: {
+  recommendTime: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -344,10 +391,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = state => {
-  return {
-    fallAsleepTime: state.fallAsleepTime,
-  };
-};
-
-export default connect(mapStateToProps, {addAlarm})(HomeComponents);
+export default HomeComponents;

@@ -12,7 +12,7 @@ export default function AlarmListScreen({ navigation }) {
       style={{ flex: 1 }}
     >
       <AppBackground>
-        <AlarmListScreenComponents />
+        <AlarmListScreenComponents navigation={navigation}/>
       </AppBackground>
     </GestureRecognizer>
   );
