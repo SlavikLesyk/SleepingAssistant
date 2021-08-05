@@ -20,11 +20,9 @@ const AlarmListComponents = ({navigation}) => {
 
   useEffect(() => {
     getAlarmList();
-    console.log('mount');
   }, []);
 
   useEffect(() => {
-    console.log('focused');
     const unsubscribe = navigation.addListener('focus', () => {
       getAlarmList();
     });

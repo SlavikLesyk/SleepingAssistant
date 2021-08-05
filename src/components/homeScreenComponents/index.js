@@ -12,9 +12,11 @@ import {BG_COLOR_COMPONENTS, COLOR_MAIN, windowHeight} from '../../Constants';
 import AnimationControl from './AnimationControl';
 import AnimatedSpinner from './AnimatedSpinner';
 import AnimatedText from '../../utility/AnimatedText';
+import {updateNotification} from '../../notification/pushNotification';
 import Button from '../Button';
 import CirclePhase from './CirclePhase';
 import AppText from '../AppText';
+import moment from 'moment';
 
 const ONE_STEP_VALUE = 80;
 const MINUTES = 60;
@@ -255,14 +257,16 @@ function HomeComponents({navigation}) {
           id: id,
           time: `${hoursText.value}:${minutesText.value}`,
           isOn: true,
-          name: 'name',
+          name: '',
           repeat: false,
           recommend4Phase: recommendText4Phase.value,
           recommend5Phase: recommendText5Phase.value,
           recommend6Phase: recommendText6Phase.value,
         },
       ]);
+
       await AsyncStorage.setItem('alarmList', newList);
+      await updateNotification();
     } catch (e) {
       console.log(e);
     }

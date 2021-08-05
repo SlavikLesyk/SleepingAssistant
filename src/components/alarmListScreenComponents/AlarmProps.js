@@ -5,6 +5,7 @@ import Button from '../Button';
 import AppText from '../AppText';
 import AppInput from '../AppInput';
 import {deleteData, editData, getData} from '../../utility/asyncStorageHandler';
+import {updateNotification} from '../../notification/pushNotification';
 // import DaysCicle from './DaysCicle';
 import {
   BG_COLOR_COMPONENTS,
@@ -22,25 +23,28 @@ const AlarmProps = ({id, deleteAlarm}) => {
     const alarmList = await getData('alarmList');
     const alarmData = alarmList.filter(item => item.id === id)[0];
     setAlarmData(alarmData);
-    setText(alarmData.name)
+    setText(alarmData.name);
   };
 
   useEffect(() => {
     getAlarmData();
   }, []);
 
-  const onPressDelete = () => {
-    deleteData('alarmList', id);
+  const onPressDelete = async () => {
+    await deleteData('alarmList', id);
+    await updateNotification();
     deleteAlarm();
   };
 
   const saveName = async () => {
     await editData('alarmList', {id: id, name: text});
+    await updateNotification();
     setAlarmData({...alarmData, name: text});
   };
 
   const toggleRepeat = async () => {
     await editData('alarmList', {id: id, repeat: !alarmData.repeat});
+    await updateNotification();
     setAlarmData({...alarmData, repeat: !alarmData.repeat});
   };
 
@@ -64,6 +68,8 @@ const AlarmProps = ({id, deleteAlarm}) => {
       </View>
       <View style={styles.title}>
         <AppInput
+          placeholder="name"
+          placeholderTextColor={COLOR_SECONDARY}
           value={text}
           onChangeText={value => setText(value)}
           style={styles.input}

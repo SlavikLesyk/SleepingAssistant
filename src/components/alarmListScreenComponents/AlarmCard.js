@@ -5,6 +5,7 @@ import Clock from './Clock';
 import AlarmProps from './AlarmProps';
 import {windowHeight, BG_COLOR_COMPONENTS} from '../../Constants';
 import {editData} from '../../utility/asyncStorageHandler';
+import {updateNotification} from '../../notification/pushNotification';
 
 const cardHeight = (windowHeight - 25) * 0.15;
 
@@ -21,18 +22,24 @@ const AlarmCard = props => {
     deleteAlarm,
   } = props;
   const [isAlarmOn, setIsAlarmOn] = useState(isOn);
+  const [alarmTime, setAlarmTime] = useState(time);
   const renderAlarmProps = () => {
-    return showProps ? <AlarmProps id={id} deleteAlarm={deleteAlarm}/> : null;
+    return showProps ? <AlarmProps id={id} deleteAlarm={deleteAlarm} /> : null;
   };
 
-  const toggleAlarm = () => {
-    editData('alarmList', {
+  const handleAlarmTime = time => {
+    setAlarmTime(time);
+  };
+
+  const toggleAlarm = async () => {
+    await editData('alarmList', {
       id: id,
       time: time,
       isOn: !isAlarmOn,
       name: name,
       repeat: repeat,
     });
+    updateNotification();
     setIsAlarmOn(prevState => !prevState);
   };
 
@@ -49,7 +56,13 @@ const AlarmCard = props => {
           </Button>
         </View>
         <View style={styles.clockContainer}>
-          <Clock time={time} fontSize={cardHeight * 0.5} id={id} />
+          <Clock
+            time={time}
+            fontSize={cardHeight * 0.5}
+            id={id}
+            isAlarmOn={isAlarmOn}
+            onChangeTime={handleAlarmTime}
+          />
         </View>
         <View style={styles.toggleSwitch}>
           <Button
