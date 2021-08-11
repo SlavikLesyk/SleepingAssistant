@@ -10,9 +10,9 @@ import {updateNotification} from './src/notification/pushNotification';
 
 PushNotification.configure({
   onNotification: function (notification) {
-    console.log('NOTIFICATION:', notification);
-    if(notification.action === 'deny'){
-      updateNotification();
+    console.log('NOTIFICATION:', notification.data.alarmId);
+    if (notification.action === 'Deny') {
+      updateNotification(notification.data.alarmId);
     }
   },
 

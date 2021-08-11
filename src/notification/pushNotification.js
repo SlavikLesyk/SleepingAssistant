@@ -1,7 +1,7 @@
 import PushNotification from 'react-native-push-notification';
 import {notificationTitles, notificationMessages} from './notificationText';
 import moment from 'moment';
-import {getData} from '../utility/asyncStorageHandler';
+import {getData, editData} from '../utility/asyncStorageHandler';
 import {Platform} from 'react-native';
 
 const SNOOZE_TIME = 5;
@@ -121,12 +121,21 @@ const createDateObj = (time, snooze) => {
   return new Date(moment(checkedDate).add(snooze, 'minutes').format());
 };
 
-const createScheduleNotification = (time, snooze, repeat, title, message) => {
+const createScheduleNotification = (
+  id,
+  time,
+  snooze,
+  repeat,
+  title,
+  message,
+) => {
   const date = createDateObj(time, snooze);
-  console.log('notification: ', repeat, time);
   PushNotification.localNotificationSchedule({
     title: title,
     message: message ? message : getNotificationMessage(),
+    userInfo: {
+      alarmId: id,
+    },
     playSound: true,
     date: date,
     channelId: 'soundAlarm',
@@ -141,25 +150,29 @@ const createScheduleNotification = (time, snooze, repeat, title, message) => {
   });
 };
 
-const multiplyNotification = (time, repeat, title, message) => {
+const multiplyNotification = (id, time, repeat, title, message) => {
   for (let i = 0; i < REPEAT; i++) {
     const snoozeTime = SNOOZE_TIME * i;
-    createScheduleNotification(time, snoozeTime, repeat, title, message);
+    createScheduleNotification(id, time, snoozeTime, repeat, title, message);
   }
 };
 
-const updateNotification = async () => {
+const updateNotification = async alarmId => {
   PushNotification.cancelAllLocalNotifications();
-  const alarmList = await getData('alarmList');
-  alarmList.map(item =>
-    item.isOn
-      ? multiplyNotification(
-          item.time,
-          item.repeat,
-          item.name ? item.name : 'Alarm',
-        )
-      : null,
-  );
+  const alarmList = alarmId
+    ? await editData('alarmList', {id: alarmId, isOn: false})
+    : await getData('alarmList');
+
+  alarmList.map(item => {
+    if (item.isOn) {
+      multiplyNotification(
+        item.id,
+        item.time,
+        item.repeat,
+        item.name ? item.name : 'Alarm',
+      );
+    }
+  });
 };
 
 export {updateNotification};

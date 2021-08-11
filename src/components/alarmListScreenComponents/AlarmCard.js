@@ -17,30 +17,31 @@ const AlarmCard = props => {
     time,
     id,
     isOn,
-    name,
-    repeat,
     deleteAlarm,
   } = props;
   const [isAlarmOn, setIsAlarmOn] = useState(isOn);
-  const [alarmTime, setAlarmTime] = useState(time);
   const renderAlarmProps = () => {
     return showProps ? <AlarmProps id={id} deleteAlarm={deleteAlarm} /> : null;
   };
 
-  const handleAlarmTime = time => {
-    setAlarmTime(time);
-  };
-
-  const toggleAlarm = async () => {
+  const onAlarm = async () => {
+    setIsAlarmOn(true);
     await editData('alarmList', {
       id: id,
-      time: time,
-      isOn: !isAlarmOn,
-      name: name,
-      repeat: repeat,
+      isOn: true,
     });
     updateNotification();
-    setIsAlarmOn(prevState => !prevState);
+    setIsAlarmOn(true);
+  };
+
+  
+  const offAlarm = async () => {
+    await editData('alarmList', {
+      id: id,
+      isOn: false,
+    });
+    updateNotification();
+    setIsAlarmOn(false);
   };
 
   return (
@@ -61,7 +62,6 @@ const AlarmCard = props => {
             fontSize={cardHeight * 0.5}
             id={id}
             isAlarmOn={isAlarmOn}
-            onChangeTime={handleAlarmTime}
           />
         </View>
         <View style={styles.toggleSwitch}>
@@ -70,7 +70,7 @@ const AlarmCard = props => {
               opacity: isAlarmOn ? 1 : 0.5,
               fontSize: cardHeight * 0.25,
             }}
-            onPress={isAlarmOn ? null : toggleAlarm}>
+            onPress={onAlarm}>
             on
           </Button>
           <Button
@@ -78,7 +78,7 @@ const AlarmCard = props => {
               opacity: isAlarmOn ? 0.5 : 1,
               fontSize: cardHeight * 0.25,
             }}
-            onPress={isAlarmOn ? toggleAlarm : null}>
+            onPress={offAlarm}>
             off
           </Button>
         </View>

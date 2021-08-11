@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 import {
   View,
   StyleSheet,
@@ -14,25 +15,33 @@ const AlarmListComponents = ({navigation}) => {
   const [showPropsId, setShowPropsId] = useState(null);
 
   const getAlarmList = async () => {
-    const alarmList = await getData('alarmList');
-    setAlarmList(alarmList);
+    const list = await getData('alarmList');
+    setAlarmList(list);
+    console.log('set Data');
   };
 
   useEffect(() => {
     getAlarmList();
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      getAlarmList();
-    });
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('focus', () => {
+  //     getAlarmList();
+  //   });
 
-    return unsubscribe;
-  }, [navigation]);
+  //   return unsubscribe;
+  // }, [navigation]);
+  useFocusEffect(
+    React.useCallback(() => {
+      getAlarmList();
+      console.log('focus');
+    }, [navigation]),
+  );
 
   const closeProps = () => setShowPropsId(null);
 
   const renderList = ({item}) => {
+    console.log('render List');
     const openProps = () => setShowPropsId(item.id);
     const deleteAlarm = () =>
       setAlarmList(alarmList.filter(element => element.id !== item.id));

@@ -4,14 +4,10 @@ import {COLOR_MAIN} from '../../Constants';
 import AppInput from '../AppInput';
 import AppText from '../AppText';
 import {editData} from '../../utility/asyncStorageHandler';
-import {
-  multiplyNotification,
-  handleCancel,
-  updateNotification
-} from '../../notification/pushNotification';
+import {updateNotification} from '../../notification/pushNotification';
 
 function Clock(props) {
-  const {time, fontSize, id, isAlarmOn, onChangeTime} = props;
+  const {time, fontSize, id} = props;
   const [hours, setHours] = useState(time.split(':')[0]);
   const [minutes, setMinutes] = useState(time.split(':')[1]);
   const [oldHours, setOldHours] = useState('');
@@ -83,8 +79,6 @@ function Clock(props) {
     }
     await saveTime(`${hoursValue}:${minutesValue}`);
     await updateNotification();
-    onChangeTime(`${hoursValue}:${minutesValue}`);
-    
   };
 
   return (

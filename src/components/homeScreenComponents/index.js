@@ -37,17 +37,13 @@ function HomeComponents({navigation}) {
       console.log(e);
     }
   };
-  console.log(fallAsleepTime);
   useEffect(() => {
     getFallAsleepTime();
-    console.log(fallAsleepTime);
   }, []);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       getFallAsleepTime();
-      console.log('focused');
-      console.log(fallAsleepTime);
     });
 
     return unsubscribe;
@@ -160,7 +156,6 @@ function HomeComponents({navigation}) {
   });
 
   const recommendText5Phase = useDerivedValue(() => {
-    console.log(fallAsleepTime);
     let lapM = Math.ceil(
       (minutesAnimation.value + (fallAsleepTime + 30) * ONE_STEP_VALUE) /
         (ONE_STEP_VALUE * MINUTES),

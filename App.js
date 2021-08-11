@@ -38,7 +38,7 @@ const App = () => {
     <Provider store={createStore(reducers)}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="Home"
+          initialRouteName="Playlist"
           screenOptions={{
             headerShown: false,
           }}>
