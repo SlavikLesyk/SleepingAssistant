@@ -13,4 +13,4 @@ export const COLOR_SECONDARY = 'rgb(255, 255, 255)';
 export const BG_FIRST_COLOR = '#032250';
 export const BG_SECOND_COLOR = '#010f23';
 export const BG_COLOR_COMPONENTS = 'rgba(4, 44, 96, .4)';
-export const BG_COLOR_CIRCLES = '#010f23';
+export const BG_COLOR_CIRCLES = 'rgb(3, 21, 56)';

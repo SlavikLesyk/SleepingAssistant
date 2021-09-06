@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet, ScrollView} from 'react-native';
 import AppBackground from '../AppBackground';
 import ModalAsk from '../ModalAsk';
@@ -7,35 +7,43 @@ import AppInput from '../AppInput';
 import AppText from '../AppText';
 import {BG_COLOR_COMPONENTS, windowHeight, windowWidth} from '../../Constants';
 import {
-  addNewDreamNote,
-  editDreamNote,
-  deleteDreamNote,
-} from './dreamNotesHandler';
-import {
   addNewData,
   editData,
   deleteData,
 } from '../../utility/asyncStorageHandler';
 
 const DreamNoteScreen = ({navigation, route}) => {
-  const {isNewDream, id, dream} = route.params;
+  const {isNewDream, id} = route.params;
+
+  // const generateNewId = list =>
+  // list.length ? list[list.length - 1].id + 1 : 1;
 
   const date = isNewDream ? new Date().toLocaleDateString() : dream.time;
-  const DEFAULT_TITLE = 'Fuck the World!';
+  const DEFAULT_TITLE = 'My Dream';
 
-  const [header, setHeader] = useState(
-    isNewDream ? DEFAULT_TITLE : dream.title,
-  );
+  const [title, setTitle] = useState(dream ? dream.title : DEFAULT_TITLE);
   const [text, setText] = useState(dream ? dream.note : '');
   const [editMode, setEditMode] = useState(isNewDream);
-  const [newDream, setNewDream] = useState(isNewDream);
   const [needAdd, setNeedAdd] = useState(isNewDream);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalProps, setModalProps] = useState({});
 
+  let savedText = isNewDream ? '' : dream.note;
+  let savedTitle = isNewDream ? DEFAULT_TITLE : dream.title;
+
   const visibleHandler = () => setModalVisible(!modalVisible);
 
   const editModeToggle = () => setEditMode(!editMode);
+
+  const savePrevCondition = () => {
+    savedText = text;
+    savedTitle = title;
+  };
+
+  const onPressEdit = () => {
+    savePrevCondition();
+    editModeToggle();
+  };
 
   const onDeleteYes = () => {
     deleteData('dreamNotes', id);
@@ -52,34 +60,36 @@ const DreamNoteScreen = ({navigation, route}) => {
   };
 
   const onFirstTimeFocus = () => {
-    if (newDream) {
-      setHeader('');
-      setNewDream(false);
+    if (isNewDream) {
+      setTitle('');
     }
   };
 
-  onPressSave = () => {
+  onPressSave = async () => {
     editModeToggle();
     if (needAdd) {
-      addNewData('dreamNotes', {
+      setNeedAdd(false);
+      console.log('add', needAdd);
+      await addNewData('dreamNotes', {
         id: id,
-        title: header,
+        title: title,
         note: text,
         time: date,
       });
-      setNeedAdd(false);
     } else {
-      editData('dreamNotes', {
+      console.log('edit data');
+      await editData('dreamNotes', {
         id: id,
-        title: header,
+        title: title,
         note: text,
-        time: date,
       });
     }
   };
 
   onPressBack = () => {
     navigation.navigate('DreamsList');
+    console.log('defaultCheck', checkIsDefault());
+    console.log('changedCheck', checkIsChanged());
   };
 
   const setDelProps = () => {
@@ -97,46 +107,33 @@ const DreamNoteScreen = ({navigation, route}) => {
     });
   };
 
-  const defaultCheck = () => {
-    // console.log(
-    //   !(
-    //     ((header === DEFAULT_TITLE || header === '') && text === '') ||
-    //     needAdd
-    //   ),
-    // );
-    // console.log('header:', header === DEFAULT_TITLE || header === '');
-    // console.log('text:', text === '');
-    // console.log('need add:', needAdd);
+  const checkIsDefault = () =>
+    (title === DEFAULT_TITLE || title === '') && text === '';
 
-    return (
-      !((header === DEFAULT_TITLE || header === '') && text === '') && needAdd
-    );
-  };
+  // const saveCheck = () =>
+  //   dream ? !(title === savedTitle && text === savedText) : checkIsDefault();
 
-  const saveCheck = () => {
-    if (dream) {
-      // console.log(
-      //   'saveCheck',
-      //   !(header === dream.title && text === dream.note),
-      // );
-      return !(header === dream.title && text === dream.note);
-    }
-    return defaultCheck();
+  const checkIsChanged = () => {
+    console.log('text', text);
+    console.log('st', savedText);
+    console.log('t', title);
+    console.log('st', savedTitle);
+    return !(text === savedText && title === savedTitle);
   };
 
   const renderHeader = () => {
     if (editMode) {
       return (
         <AppInput
-          value={header}
+          value={title}
           onFocus={onFirstTimeFocus}
-          onChangeText={value => setHeader(value)}
+          onChangeText={value => setTitle(value)}
           style={styles.headerText}
         />
       );
     }
 
-    return <AppText style={styles.headerText}>{header}</AppText>;
+    return <AppText style={styles.headerText}>{title}</AppText>;
   };
 
   const renderDreamText = () => {
@@ -166,8 +163,7 @@ const DreamNoteScreen = ({navigation, route}) => {
         <View style={styles.btnPanelLeft}>
           <Button
             onPress={() => {
-              // console.log(saveCheck());
-              if (saveCheck()) {
+              if (checkIsChanged() && !checkIsDefault()) {
                 setBackProps();
                 visibleHandler();
               } else {
@@ -181,12 +177,13 @@ const DreamNoteScreen = ({navigation, route}) => {
           {editMode ? (
             <Button onPress={onPressSave}>save</Button>
           ) : (
-            <Button onPress={editModeToggle}>edit</Button>
+            <Button onPress={onPressEdit}>edit</Button>
           )}
           <Button
-            style={{opacity: defaultCheck() ? 1 : 0.4}}
+            style={{opacity: !needAdd ? 1 : 0.4}}
             onPress={() => {
-              if (defaultCheck()) {
+              console.log(needAdd);
+              if (!needAdd) {
                 setDelProps();
                 visibleHandler();
               }

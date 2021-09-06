@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     width: 1500,
     height: 1500,
     borderRadius: 750,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: COLOR_MAIN,
     alignItems: 'center',
     zIndex: -1
@@ -62,15 +62,15 @@ const styles = StyleSheet.create({
   dote: {
     width: windowHeight * .02,
     height: windowHeight * .02,
-    borderRadius: 8,
-    borderWidth: 2,
+    borderRadius: 800,
+    borderWidth: 1,
     borderColor: COLOR_MAIN,
     backgroundColor: BG_COLOR_CIRCLES,
     position: 'absolute',
-    top: -8,
+    top: -9,
   },
   marker: {
-    width: 3,
+    width: 2,
     height: 25,
     backgroundColor: COLOR_MAIN,
     position: "absolute",

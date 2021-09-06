@@ -76,7 +76,11 @@ const AlarmProps = ({id, deleteAlarm}) => {
           onBlur={saveName}
         />
       </View>
-      <View style={styles.recSleepTime}></View>
+      <View style={styles.recSleepTime}>
+        <AppText>{alarmData.recommend4Phase}</AppText>
+        <AppText>{alarmData.recommend5Phase}</AppText>
+        <AppText>{alarmData.recommend6Phase}</AppText>
+      </View>
     </View>
   );
 };
@@ -118,6 +122,7 @@ const styles = StyleSheet.create({
   recSleepTime: {
     flex: 1,
     flexDirection: 'row',
+    justifyContent: 'space-around'
   },
 });
 

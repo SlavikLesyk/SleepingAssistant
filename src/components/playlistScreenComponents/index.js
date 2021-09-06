@@ -7,12 +7,14 @@ import TrackPlayer, {
   useTrackPlayerEvents,
   State,
   Event,
-  RepeatMode,
 } from 'react-native-track-player';
 import {windowHeight, BG_COLOR_COMPONENTS} from '../../Constants';
+import VolumeBar from './VolumeBar';
 
 export default function PlaylistComponents({navigation}) {
   const [currentTrack, setCurrentTrack] = useState(null);
+  const [volume, setVolume] = useState(1);
+
   const tracks = [
     {
       url: require('../../../assets/sounds/music1.mp3'),
@@ -41,16 +43,16 @@ export default function PlaylistComponents({navigation}) {
     },
   ];
 
-  const createPlayer = async () => {
-    await TrackPlayer.setupPlayer({});
-  };
+  const createPlayer = async () => await TrackPlayer.setupPlayer({});
+  const changeVolume = async volume => await TrackPlayer.setVolume(volume);
 
   useEffect(() => {
     createPlayer();
   }, []);
 
+  useEffect(() => changeVolume(volume), [volume]);
+
   useTrackPlayerEvents([Event.PlaybackQueueEnded], async event => {
-    console.log(event);
     setCurrentTrack(null);
   });
 
@@ -62,16 +64,20 @@ export default function PlaylistComponents({navigation}) {
   const playTrack = async track => {
     const state = await TrackPlayer.getState();
     if (state === State.Playing) {
+      console.log(track,'if');
       await TrackPlayer.reset();
       await addNewTrack(track);
       await TrackPlayer.play();
     } else {
+      console.log(track,'else');
       await addNewTrack(track);
       await TrackPlayer.play();
     }
   };
 
-  renderList = () =>
+  const onChangeVolume = volume => setVolume(volume);
+
+  const renderList = () =>
     tracks.map(track => {
       return (
         <View style={styles.soundsItem} key={track.title}>
@@ -88,6 +94,7 @@ export default function PlaylistComponents({navigation}) {
           @ by {currentTrack ? currentTrack.artist : null}
         </AppText>
         <Button onPress={TrackPlayer.reset}>silence</Button>
+        <VolumeBar onChangeVolume={onChangeVolume} />
         {/* <View style={styles.fadeOutPanel}>
           <AppText>fade out in:</AppText>
           <AppInput

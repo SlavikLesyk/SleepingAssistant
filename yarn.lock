@@ -1745,6 +1745,11 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
+"@lowkey/react-native-gif@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@lowkey/react-native-gif/-/react-native-gif-3.0.1.tgz#951e7155067b4eb4efcd8943de685e0e0ef29238"
+  integrity sha512-fCBNnwFm3MVyHLbBMERa9jF1Ut3f7QkMBr20S0KIBXfX29rrnm1dlAFcGMP1e+PTEHO5u2etnSf67rNDwRYiTg==
+
 "@nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents.2":
   version "2.1.8-no-fsevents.2"
   resolved "https://registry.yarnpkg.com/@nicolo-ribaudo/chokidar-2/-/chokidar-2-2.1.8-no-fsevents.2.tgz#e324c0a247a5567192dd7180647709d7e2faf94b"

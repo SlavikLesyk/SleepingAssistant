@@ -17,7 +17,6 @@ const AlarmListComponents = ({navigation}) => {
   const getAlarmList = async () => {
     const list = await getData('alarmList');
     setAlarmList(list);
-    console.log('set Data');
   };
 
   useEffect(() => {
@@ -34,14 +33,12 @@ const AlarmListComponents = ({navigation}) => {
   useFocusEffect(
     React.useCallback(() => {
       getAlarmList();
-      console.log('focus');
     }, [navigation]),
   );
 
   const closeProps = () => setShowPropsId(null);
 
   const renderList = ({item}) => {
-    console.log('render List');
     const openProps = () => setShowPropsId(item.id);
     const deleteAlarm = () =>
       setAlarmList(alarmList.filter(element => element.id !== item.id));

@@ -10,11 +10,14 @@ import PlaylistScreen from './src/screens/PlaylistScreen';
 import AboutProgramScreen from './src/screens/AboutProgramScreen';
 import AboutUsScreen from './src/screens/AboutUsScreen';
 import DreamListScreen from './src/screens/DreamListScreen';
-import DreamNoteScreen from './src/components/dreamNotesScreenComponents/DreamNoteScreen';
+import DreamNoteScreen from './src/screens/DreamNoteScreen';
 import PersonalizationScreen from './src/screens/PersonalizationScreen';
 import StartingScreen from './src/screens/StartingScreen';
 import reducers from './src/reducers';
 import PushNotification, {Importance} from 'react-native-push-notification';
+import TrackPlayer from 'react-native-track-player'
+
+TrackPlayer.registerPlaybackService(() => require('./service'));
 
 enableScreens();
 
@@ -24,7 +27,7 @@ const App = () => {
   const createChannel = () =>
     PushNotification.createChannel({
       channelId: 'soundAlarm',
-      channelName: 'notification',
+      channelName: 'notification',  
       soundName: 'bell1.mp3',
       importance: Importance.HIGH,
       vibrate: true,
@@ -38,7 +41,7 @@ const App = () => {
     <Provider store={createStore(reducers)}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="Playlist"
+          initialRouteName="DreamsList"
           screenOptions={{
             headerShown: false,
           }}>

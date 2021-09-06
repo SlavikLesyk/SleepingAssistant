@@ -1,7 +1,7 @@
 import React from 'react';
 import GestureRecognizer from '../utility/swipe-gestures';
 import AppBackground from '../components/AppBackground';
-import DreamNotesScreenComponents from '../components/dreamNotesScreenComponents';
+import DreamListScreenComponents from '../components/dreamListScreenComponents';
 
 export default function DreamListScreen({ navigation }) {
 
@@ -12,7 +12,7 @@ export default function DreamListScreen({ navigation }) {
       style={{ flex: 1 }}
     >
       <AppBackground>
-        <DreamNotesScreenComponents navigation={navigation}/>
+        <DreamListScreenComponents navigation={navigation}/>
       </AppBackground>
     </GestureRecognizer>
   );

@@ -30,7 +30,7 @@ const sounds = [
   {
     id: '4',
     path: 'sound4.mp3',
-    title: 'Psyho Lizard',
+    title: 'Psycho Lizard',
     author: 'slow lizard',
   },
   {
