@@ -1,21 +1,17 @@
 import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
+import {connect} from 'react-redux';
+import {editAlarm} from '../../store/actions';
 import {COLOR_MAIN} from '../../Constants';
 import AppInput from '../AppInput';
 import AppText from '../AppText';
-import {editData} from '../../utility/asyncStorageHandler';
-import {updateNotification} from '../../notification/pushNotification';
 
 function Clock(props) {
-  const {time, fontSize, id} = props;
+  const {time, fontSize, id, editAlarm} = props;
   const [hours, setHours] = useState(time.split(':')[0]);
   const [minutes, setMinutes] = useState(time.split(':')[1]);
   const [oldHours, setOldHours] = useState('');
   const [oldMinutes, setOldMinutes] = useState('');
-
-  const saveTime = async time => {
-    await editData('alarmList', {id: id, time: time});
-  };
 
   const setTimeOnChange = (value, type) => {
     let newValue = value.replace(/[^0-9]{0,2}/g, '');
@@ -49,7 +45,7 @@ function Clock(props) {
     }
   };
 
-  const setTimeOnBlur = async type => {
+  const setTimeOnBlur = type => {
     let minutesValue = minutes;
     let hoursValue = hours;
 
@@ -77,8 +73,7 @@ function Clock(props) {
       default:
         console.error('setTimeOnBlur type error');
     }
-    await saveTime(`${hoursValue}:${minutesValue}`);
-    await updateNotification();
+    editAlarm(id, `${hours}:${minutes}`);
   };
 
   return (
@@ -92,6 +87,7 @@ function Clock(props) {
         onChangeText={value => setTimeOnChange(value, 'hours')}
         onBlur={() => {
           setTimeOnBlur('hours');
+          // this.props.onBlur ? this.props.onBlur('hours', this.state.hours) : null
         }}
         keyboardType="number-pad"
         maxLength={2}
@@ -107,6 +103,7 @@ function Clock(props) {
         onChangeText={value => setTimeOnChange(value, 'minutes')}
         onBlur={() => {
           setTimeOnBlur('minutes');
+          // this.props.onBlur ? this.props.onBlur('minutes', this.state.minutes) : null
         }}
         keyboardType="number-pad"
         maxLength={2}
@@ -130,4 +127,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Clock;
+export default connect(null, {editAlarm})(Clock);

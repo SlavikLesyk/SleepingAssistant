@@ -9,7 +9,7 @@ import Button from '../../components/Button';
 import AppText from '../../components/AppText';
 import SleepingCircle from './SleepingCircle';
 import AnimationControl from './AnimationControl';
-import { changeFallAsleepTime } from '../../actions';
+import { changeFallAsleepTime } from '../../store/actions';
 import { windowHeight } from '../../Constants';
 import AnimatedText from '../../utility/AnimatedText';
 
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  return { fallAsleepTime: state.fallAsleepTime };
+  return { fallAsleepTime: state.alarms.fallAsleepTime };
 }
 
 export default connect(mapStateToProps, { changeFallAsleepTime })(StartingComponents)

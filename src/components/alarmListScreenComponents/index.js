@@ -1,5 +1,4 @@
-import React, {useEffect, useState} from 'react';
-import {useFocusEffect} from '@react-navigation/native';
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,50 +6,20 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import {connect} from 'react-redux';
 import AlarmCard from './AlarmCard';
-import {getData} from '../../utility/asyncStorageHandler';
 
-const AlarmListComponents = ({navigation}) => {
-  const [alarmList, setAlarmList] = useState([]);
-  const [showPropsId, setShowPropsId] = useState(null);
+const AlarmListComponents = ({alarms}) => {
+  const [activeProps, setActiveProps] = useState(null);
 
-  const getAlarmList = async () => {
-    const list = await getData('alarmList');
-    setAlarmList(list);
-  };
-
-  useEffect(() => {
-    getAlarmList();
-  }, []);
-
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('focus', () => {
-  //     getAlarmList();
-  //   });
-
-  //   return unsubscribe;
-  // }, [navigation]);
-  useFocusEffect(
-    React.useCallback(() => {
-      getAlarmList();
-    }, [navigation]),
-  );
-
-  const closeProps = () => setShowPropsId(null);
+  const chooseActiveProps = (id) => {
+    setActiveProps(id);
+  }
 
   const renderList = ({item}) => {
-    const openProps = () => setShowPropsId(item.id);
-    const deleteAlarm = () =>
-      setAlarmList(alarmList.filter(element => element.id !== item.id));
     return (
       <View style={styles.cardWrap}>
-        <AlarmCard
-          {...item}
-          showProps={showPropsId === item.id}
-          openProps={openProps}
-          closeProps={closeProps}
-          deleteAlarm={deleteAlarm}
-        />
+        <AlarmCard {...item} chooseActiveProps={chooseActiveProps} activeProps={activeProps}/>
       </View>
     );
   };
@@ -62,7 +31,7 @@ const AlarmListComponents = ({navigation}) => {
       <View>
         <FlatList
           removeClippedSubviews={false}
-          data={[...alarmList].reverse()}
+          data={[...alarms].reverse()}
           renderItem={renderList}
           keyExtractor={item => item.id + item.name}
         />
@@ -77,4 +46,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AlarmListComponents;
+const mapStateToProps = state => {
+  return {alarms: state.alarms.alarmsList};
+};
+
+export default connect(mapStateToProps, {})(AlarmListComponents);

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import Animated, {
   useSharedValue,
@@ -7,7 +7,9 @@ import Animated, {
   cancelAnimation,
   interpolate,
 } from 'react-native-reanimated';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {connect} from 'react-redux';
+import {addAlarm, } from '../../store/actions';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import {BG_COLOR_COMPONENTS, COLOR_MAIN, windowHeight} from '../../Constants';
 import AnimationControl from './AnimationControl';
 import AnimatedSpinner from './AnimatedSpinner';
@@ -16,38 +18,37 @@ import {updateNotification} from '../../notification/pushNotification';
 import Button from '../Button';
 import CirclePhase from './CirclePhase';
 import AppText from '../AppText';
-import moment from 'moment';
+import alarmListReducer from '../../store/reducers/alarmListReducer';
 
 const ONE_STEP_VALUE = 80;
 const MINUTES = 60;
 const HOURS = 24;
 
-function HomeComponents({navigation}) {
-  const [fallAsleepTime, setFallAsleepTime] = useState(null);
+function HomeComponents({fallAsleepTime, navigation, addAlarm, alarmsList}) {
   const minutesAnimation = useSharedValue(0);
   const hoursAnimation = useSharedValue(-7 * ONE_STEP_VALUE);
 
-  const getFallAsleepTime = async () => {
-    try {
-      const value = await AsyncStorage.getItem('fallAsleepTime');
-      if (value !== null) {
-        setFallAsleepTime(Number(value));
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  useEffect(() => {
-    getFallAsleepTime();
-  }, []);
+  // const getFallAsleepTime = async () => {
+  //   try {
+  //     const value = await AsyncStorage.getItem('fallAsleepTime');
+  //     if (value !== null) {
+  //       setFallAsleepTime(Number(value));
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
+  // useEffect(() => {
+  //   getFallAsleepTime();
+  // }, []);
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      getFallAsleepTime();
-    });
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('focus', () => {
+  //     getFallAsleepTime();
+  //   });
 
-    return unsubscribe;
-  }, [navigation]);
+  //   return unsubscribe;
+  // }, [navigation]);
 
   const onChangeMinutes = value => {
     'worklet';
@@ -242,29 +243,8 @@ function HomeComponents({navigation}) {
   });
 
   const onPressAddAlarm = async () => {
-    try {
-      const jsonList = await AsyncStorage.getItem('alarmList');
-      const list = jsonList ? JSON.parse(jsonList) : [];
-      const id = list[0] ? list[list.length - 1].id + 1 : 1;
-      const newList = JSON.stringify([
-        ...list,
-        {
-          id: id,
-          time: `${hoursText.value}:${minutesText.value}`,
-          isOn: true,
-          name: '',
-          repeat: false,
-          recommend4Phase: recommendText4Phase.value,
-          recommend5Phase: recommendText5Phase.value,
-          recommend6Phase: recommendText6Phase.value,
-        },
-      ]);
-
-      await AsyncStorage.setItem('alarmList', newList);
-      await updateNotification();
-    } catch (e) {
-      console.log(e);
-    }
+    await addAlarm({
+      time: `${hoursText.value}:${minutesText.value}`});
   };
 
   return (
@@ -313,10 +293,10 @@ function HomeComponents({navigation}) {
       </View>
       <View style={styles.buttonSection}>
         <Button
-          onPress={async () => {
+          onPress={() => {
             cancelAnimation(hoursAnimation);
             cancelAnimation(minutesAnimation);
-            await onPressAddAlarm();
+            onPressAddAlarm();
             navigation.navigate('Alarm');
           }}>
           add alarm
@@ -390,4 +370,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeComponents;
+const mapStateToProps = state => {
+  return {
+    fallAsleepTime: state.alarms.fallAsleepTime,
+    alarmsList: state.alarms.alarmsList
+  };
+};
+
+export default connect(mapStateToProps, {addAlarm})(HomeComponents);

@@ -92,7 +92,6 @@ class PlaylistScreen extends React.Component {
   }
 
   startFadeOut = (min) => {
-    console.log('start')
     this.volume = 1;
     this.player.volume = this.volume;
     clearTimeout(this.fadeOutTimerStart);

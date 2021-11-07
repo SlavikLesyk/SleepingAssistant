@@ -6,20 +6,20 @@ import {windowHeight, windowWidth, BG_COLOR_COMPONENTS} from '../../Constants';
 import {getData} from '../../utility/asyncStorageHandler';
 
 const DreamListScreen = ({navigation}) => {
-  const [dreamNotes, setDreamNotes] = useState([]);
+  // const [dreamNotes, setDreamNotes] = useState([]);
 
-  const getDreamNotes = async () => {
-    const dreamNotes = await getData('dreamNotes');
-    setDreamNotes(dreamNotes);
-    return dreamNotes;
-  };
+  // const getDreamNotes = async () => {
+  //   const dreamNotes = await getData('dreamNotes');
+  //   setDreamNotes(dreamNotes);
+  //   return dreamNotes;
+  // };
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', async () => {
-      getDreamNotes();
-    });
-    return unsubscribe;
-  }, [navigation]);
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('focus', async () => {
+  //     getDreamNotes();
+  //   });
+  //   return unsubscribe;
+  // }, [navigation]);
 
   const renderList = ({item}) => {
     return (
@@ -47,7 +47,7 @@ const DreamListScreen = ({navigation}) => {
 
   return (
     <View>
-      <View style={styles.addButton}>
+      {/* <View style={styles.addButton}>
         <Button
           onPress={() => navigation.navigate('DreamNote', {isNewDream: true})}>
           add dream note
@@ -57,7 +57,7 @@ const DreamListScreen = ({navigation}) => {
         data={[...dreamNotes].reverse()}
         renderItem={renderList}
         keyExtractor={item => item.id}
-      />
+      /> */}
     </View>
   );
 };

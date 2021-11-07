@@ -1,86 +1,72 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, StyleSheet, Platform} from 'react-native';
+import {connect} from 'react-redux';
 import Button from '../Button';
 import Clock from './Clock';
+import Toggle from './Toggle';
 import AlarmProps from './AlarmProps';
+import {toggleAlarm} from '../../store/actions';
 import {windowHeight, BG_COLOR_COMPONENTS} from '../../Constants';
-import {editData} from '../../utility/asyncStorageHandler';
-import {updateNotification} from '../../notification/pushNotification';
 
 const cardHeight = (windowHeight - 25) * 0.15;
 
 const AlarmCard = props => {
   const {
-    openProps,
-    closeProps,
-    showProps,
-    time,
+    // toggleAlarm,
     id,
+    time,
     isOn,
-    deleteAlarm,
+    chooseActiveProps,
+    activeProps,
   } = props;
-  const [isAlarmOn, setIsAlarmOn] = useState(isOn);
+
+  console.log(id,isOn)
+  // onPressToggle = () => {
+  //   toggleAlarm(id);
+  // };
+
+  const openProps = () =>
+    activeProps === id ? chooseActiveProps(null) : chooseActiveProps(id);
+
   const renderAlarmProps = () => {
-    return showProps ? <AlarmProps id={id} deleteAlarm={deleteAlarm} /> : null;
-  };
-
-  const onAlarm = async () => {
-    setIsAlarmOn(true);
-    await editData('alarmList', {
-      id: id,
-      isOn: true,
-    });
-    updateNotification();
-    setIsAlarmOn(true);
-  };
-
-  
-  const offAlarm = async () => {
-    await editData('alarmList', {
-      id: id,
-      isOn: false,
-    });
-    updateNotification();
-    setIsAlarmOn(false);
+    return activeProps === id ? <AlarmProps id={id} /> : null;
   };
 
   return (
     <View
       style={styles.container}
       behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
-      <View style={[styles.cardContainer, {marginBottom: showProps ? 6 : 0}]}>
+      <View
+        style={[
+          styles.cardContainer,
+          {marginBottom: activeProps === id ? 6 : 0},
+        ]}>
         <View style={styles.dropDownButton}>
-          <Button
-            style={styles.button}
-            onPress={showProps ? closeProps : openProps}>
+          <Button style={styles.button} onPress={openProps}>
             ...
           </Button>
         </View>
         <View style={styles.clockContainer}>
-          <Clock
-            time={time}
-            fontSize={cardHeight * 0.5}
-            id={id}
-            isAlarmOn={isAlarmOn}
-          />
+          <Clock time={time} fontSize={cardHeight * 0.5} id={id} />
         </View>
         <View style={styles.toggleSwitch}>
-          <Button
+          {/* <Button
             style={{
-              opacity: isAlarmOn ? 1 : 0.5,
+              opacity: isOn ? 1 : 0.5,
               fontSize: cardHeight * 0.25,
             }}
-            onPress={onAlarm}>
+            onPress={isOn ? null : onPressToggle}>
             on
           </Button>
           <Button
             style={{
-              opacity: isAlarmOn ? 0.5 : 1,
+              opacity: isOn ? 0.5 : 1,
               fontSize: cardHeight * 0.25,
             }}
-            onPress={offAlarm}>
+            onPress={isOn ? onPressToggle : null}>
             off
-          </Button>
+          </Button> */}
+          <Toggle isOn={isOn} id={id} />
         </View>
       </View>
       {renderAlarmProps()}
@@ -118,4 +104,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AlarmCard;
+export default connect(null, {toggleAlarm})(AlarmCard);

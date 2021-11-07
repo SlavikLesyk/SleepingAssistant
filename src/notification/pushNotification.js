@@ -1,5 +1,5 @@
 import PushNotification from 'react-native-push-notification';
-import {notificationTitles, notificationMessages} from './notificationText';
+import {notificationMessages} from './notificationText';
 import moment from 'moment';
 import {getData, editData} from '../utility/asyncStorageHandler';
 import {Platform} from 'react-native';
@@ -157,11 +157,8 @@ const multiplyNotification = (id, time, repeat, title, message) => {
   }
 };
 
-const updateNotification = async alarmId => {
+const updateNotification = async alarmList => {
   PushNotification.cancelAllLocalNotifications();
-  const alarmList = alarmId
-    ? await editData('alarmList', {id: alarmId, isOn: false})
-    : await getData('alarmList');
 
   alarmList.map(item => {
     if (item.isOn) {

@@ -7,6 +7,7 @@ import Animated, {
   useAnimatedStyle,
   interpolate,
 } from 'react-native-reanimated';
+import {connect} from 'react-redux';
 
 const RADIUS = windowHeight * 0.4;
 
@@ -24,7 +25,6 @@ const CirclePhase = ({fallAsleepTime}) => {
       setHours(new Date().getHours());
       setMinutes(new Date().getMinutes());
     }, 200);
-
     return () => clearInterval(timerID);
   }, []);
 
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     // opacity: 0.8,
     width: RADIUS,
     height: RADIUS,
-    borderWidth: .5,
+    borderWidth: 0.5,
     borderColor: COLOR_MAIN,
     borderRadius: windowHeight * 0.2,
     justifyContent: 'center',
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     width: windowHeight * 0.02,
     height: windowHeight * 0.02,
     borderColor: COLOR_MAIN,
-    borderWidth: .5,
+    borderWidth: 0.5,
     borderRadius: windowHeight * 0.01,
     position: 'absolute',
     backgroundColor: BG_COLOR_CIRCLES,
@@ -250,4 +250,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CirclePhase;
+const mapStateToProps = (state) => {
+  return {
+    fallAsleepTime: state.alarms.fallAsleepTime,
+  };
+}
+
+export default connect(mapStateToProps, {})(CirclePhase);

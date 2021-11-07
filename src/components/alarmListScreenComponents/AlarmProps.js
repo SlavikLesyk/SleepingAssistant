@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {connect} from 'react-redux';
+import {deleteAlarm, changeName, toggleRepeat} from '../../store/actions';
 import Button from '../Button';
 import AppText from '../AppText';
 import AppInput from '../AppInput';
-import {deleteData, editData, getData} from '../../utility/asyncStorageHandler';
 import {updateNotification} from '../../notification/pushNotification';
 // import DaysCicle from './DaysCicle';
 import {
@@ -15,38 +15,42 @@ import {
 
 const cardHeight = windowHeight * 0.22;
 
-const AlarmProps = ({id, deleteAlarm}) => {
-  const [text, setText] = useState('');
-  const [alarmData, setAlarmData] = useState({});
+const AlarmProps = ({id, alarms, deleteAlarm, changeName, toggleRepeat}) => {
+  const alarm = alarms.find(item => item.id === id);
 
-  const getAlarmData = async () => {
-    const alarmList = await getData('alarmList');
-    const alarmData = alarmList.filter(item => item.id === id)[0];
-    setAlarmData(alarmData);
-    setText(alarmData.name);
+  const {
+    repeat,
+    name,
+    recommend4Phase,
+    recommend5Phase,
+    recommend6Phase,
+  } = alarm;
+
+  const [text, setText] = useState(name);
+
+  const onChangeText = () => {
+    changeName(id, text);
   };
 
-  useEffect(() => {
-    getAlarmData();
-  }, []);
-
-  const onPressDelete = async () => {
-    await deleteData('alarmList', id);
-    await updateNotification();
-    deleteAlarm();
+  const onPressRepeat = () => {
+    toggleRepeat(id);
   };
 
-  const saveName = async () => {
-    await editData('alarmList', {id: id, name: text});
-    await updateNotification();
-    setAlarmData({...alarmData, name: text});
+  const onPressDelete = () => {
+    deleteAlarm(id);
   };
 
-  const toggleRepeat = async () => {
-    await editData('alarmList', {id: id, repeat: !alarmData.repeat});
-    await updateNotification();
-    setAlarmData({...alarmData, repeat: !alarmData.repeat});
-  };
+  // const saveName = async () => {
+  //   await editData('alarmList', {id: id, name: text});
+  //   await updateNotification();
+  //   setAlarmData({...alarmData, name: text});
+  // };
+
+  // const toggleRepeat = async () => {
+  //   await editData('alarmList', {id: id, repeat: !alarmData.repeat});
+  //   await updateNotification();
+  //   setAlarmData({...alarmData, repeat: !alarmData.repeat});
+  // };
 
   return (
     <View style={styles.container}>
@@ -60,9 +64,7 @@ const AlarmProps = ({id, deleteAlarm}) => {
       </View>
       <View style={styles.days}>
         {/* <DaysCicle activeDays={props.days} id={props.id} /> */}
-        <Button
-          style={{opacity: alarmData.repeat ? 1 : 0.2}}
-          onPress={toggleRepeat}>
+        <Button style={{opacity: repeat ? 1 : 0.2}} onPress={onPressRepeat}>
           repeat
         </Button>
       </View>
@@ -73,13 +75,13 @@ const AlarmProps = ({id, deleteAlarm}) => {
           value={text}
           onChangeText={value => setText(value)}
           style={styles.input}
-          onBlur={saveName}
+          onBlur={onChangeText}
         />
       </View>
       <View style={styles.recSleepTime}>
-        <AppText>{alarmData.recommend4Phase}</AppText>
-        <AppText>{alarmData.recommend5Phase}</AppText>
-        <AppText>{alarmData.recommend6Phase}</AppText>
+        <AppText>{recommend4Phase}</AppText>
+        <AppText>{recommend5Phase}</AppText>
+        <AppText>{recommend6Phase}</AppText>
       </View>
     </View>
   );
@@ -122,8 +124,16 @@ const styles = StyleSheet.create({
   recSleepTime: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
   },
 });
 
-export default AlarmProps;
+const mapStateToProps = state => {
+  return {alarms: state.alarms.alarmsList};
+};
+
+export default connect(mapStateToProps, {
+  deleteAlarm,
+  toggleRepeat,
+  changeName,
+})(AlarmProps);
