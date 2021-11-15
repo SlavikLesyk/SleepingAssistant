@@ -13,18 +13,11 @@ import {
   windowHeight,
 } from '../../Constants';
 
-const cardHeight = windowHeight * 0.22;
-
 const AlarmProps = ({id, alarms, deleteAlarm, changeName, toggleRepeat}) => {
   const alarm = alarms.find(item => item.id === id);
 
-  const {
-    repeat,
-    name,
-    recommend4Phase,
-    recommend5Phase,
-    recommend6Phase,
-  } = alarm;
+  const {repeat, name, recommend4Phase, recommend5Phase, recommend6Phase} =
+    alarm;
 
   const [text, setText] = useState(name);
 
@@ -79,9 +72,28 @@ const AlarmProps = ({id, alarms, deleteAlarm, changeName, toggleRepeat}) => {
         />
       </View>
       <View style={styles.recSleepTime}>
-        <AppText>{recommend4Phase}</AppText>
-        <AppText>{recommend5Phase}</AppText>
-        <AppText>{recommend6Phase}</AppText>
+        <AppText style={styles.phaseHeading}>go to bed times:</AppText>
+        <View style={styles.recPhase}>
+          <AppText style={styles.phaseText}>4th phase</AppText>
+          <AppText style={styles.phaseTime}>{recommend4Phase}</AppText>
+          <View style={styles.phaseNotify}>
+            <Button style={styles.phaseBtn}>notify</Button>
+          </View>
+        </View>
+        <View style={styles.recPhase}>
+          <AppText style={styles.phaseText}>5th phase</AppText>
+          <AppText style={styles.phaseTime}>{recommend5Phase}</AppText>
+          <View style={styles.phaseNotify}>
+            <Button style={styles.phaseBtn}>notify</Button>
+          </View>
+        </View>
+        <View style={styles.recPhase}>
+          <AppText style={styles.phaseText}>6th phase</AppText>
+          <AppText style={styles.phaseTime}>{recommend6Phase}</AppText>
+          <View style={styles.phaseNotify}>
+            <Button style={styles.phaseBtn}>notify</Button>
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -89,7 +101,6 @@ const AlarmProps = ({id, alarms, deleteAlarm, changeName, toggleRepeat}) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: cardHeight,
     backgroundColor: BG_COLOR_COMPONENTS,
   },
   header: {
@@ -123,8 +134,38 @@ const styles = StyleSheet.create({
   },
   recSleepTime: {
     flex: 1,
+    paddingHorizontal: 25,
+    marginBottom: 5,
+  },
+  recPhase: {
+    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    marginBottom: 15,
+    alignItems: 'center',
+  },
+  phaseHeading: {
+    textAlign: 'center',
+    marginBottom: 20,
+    fontSize: 16,
+    letterSpacing: 6,
+  },
+  phaseText: {
+    flex: 2,
+    fontSize: 14,
+    letterSpacing: 6,
+  },
+  phaseTime: {
+    flex: 1,
+    textAlign: 'center',
+  },
+  phaseNotify: {
+    flex: 2,
+  },
+  phaseBtn: {
+    fontSize: 14,
+    letterSpacing: 6,
+    paddingLeft: 20,
   },
 });
 

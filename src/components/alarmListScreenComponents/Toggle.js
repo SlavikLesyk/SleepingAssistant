@@ -2,6 +2,7 @@ import * as React from 'react';
 import {View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {connect} from 'react-redux';
 import {toggleAlarm} from '../../store/actions'
+import {COLOR_MAIN} from '../../Constants';
 
 const Toggle = ({isOn, id, toggleAlarm}) => {
   onPressToggle = () => {
@@ -17,7 +18,7 @@ const Toggle = ({isOn, id, toggleAlarm}) => {
           <View
             style={[
               styles.dote,
-              isOn ? {top: 3, backgroundColor: 'white'} : {bottom: 3},
+              isOn ? {top: 3, backgroundColor: COLOR_MAIN} : {bottom: 3},
             ]}
           />
         </View>
@@ -30,14 +31,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
+    paddingRight:30, 
     marginHorizontal: 'auto',
   },
   toggle: {
     width: 34,
     height: 60,
     borderWidth: .5,
-    borderColor: '#fff',
+    borderColor: COLOR_MAIN,
     marginHorizontal: 'auto',
     borderRadius: 1000,
     position: 'relative',
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
     width: 26,
     height: 26,
     borderRadius: 1000,
-    borderColor: 'white',
+    borderColor: COLOR_MAIN,
     borderWidth: 1,
     position: 'absolute',
     left: '50%',

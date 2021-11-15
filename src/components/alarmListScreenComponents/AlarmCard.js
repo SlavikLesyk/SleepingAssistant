@@ -7,6 +7,7 @@ import Toggle from './Toggle';
 import AlarmProps from './AlarmProps';
 import {toggleAlarm} from '../../store/actions';
 import {windowHeight, BG_COLOR_COMPONENTS} from '../../Constants';
+import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
 
 const cardHeight = (windowHeight - 25) * 0.15;
 
@@ -20,7 +21,7 @@ const AlarmCard = props => {
     activeProps,
   } = props;
 
-  console.log(id,isOn)
+  console.log(id, isOn);
   // onPressToggle = () => {
   //   toggleAlarm(id);
   // };
@@ -50,22 +51,6 @@ const AlarmCard = props => {
           <Clock time={time} fontSize={cardHeight * 0.5} id={id} />
         </View>
         <View style={styles.toggleSwitch}>
-          {/* <Button
-            style={{
-              opacity: isOn ? 1 : 0.5,
-              fontSize: cardHeight * 0.25,
-            }}
-            onPress={isOn ? null : onPressToggle}>
-            on
-          </Button>
-          <Button
-            style={{
-              opacity: isOn ? 0.5 : 1,
-              fontSize: cardHeight * 0.25,
-            }}
-            onPress={isOn ? onPressToggle : null}>
-            off
-          </Button> */}
           <Toggle isOn={isOn} id={id} />
         </View>
       </View>
@@ -96,7 +81,7 @@ const styles = StyleSheet.create({
   },
   toggleSwitch: {
     flex: 1,
-    alignSelf: 'flex-end',
+    alignItems: 'flex-end',
     paddingBottom: 5,
   },
   button: {
